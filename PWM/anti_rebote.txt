@@ -1,0 +1,30 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity lanti_rebote is
+
+	port
+	(
+		-- Input ports
+		S,R	: in  std_logic;
+
+		-- Output ports
+		Q	: out std_logic
+	);
+end anti_rebote;
+
+
+architecture lSR of latchSR is
+
+	signal qo : std_logic;
+
+begin
+	
+	qo	<= '1' when S='1' else
+			'0' when R='1' else qo;
+	
+	Q	<= qo;
+
+end lSR;
