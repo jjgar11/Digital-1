@@ -1,0 +1,44 @@
+|ejercicio
+S[0] => multiplexor:mux.S[0]
+S[0] => demultiplexor:demux.S[0]
+S[1] => multiplexor:mux.S[1]
+S[1] => demultiplexor:demux.S[1]
+D[0] => multiplexor:mux.D[0]
+D[1] => multiplexor:mux.D[1]
+D[2] => multiplexor:mux.D[2]
+D[3] => multiplexor:mux.D[3]
+Z[0] << demultiplexor:demux.Z[0]
+Z[1] << demultiplexor:demux.Z[1]
+Z[2] << demultiplexor:demux.Z[2]
+Z[3] << demultiplexor:demux.Z[3]
+
+
+|ejercicio|multiplexor:mux
+S[0] => Mux0.IN1
+S[1] => Mux0.IN0
+D[0] => Mux0.IN5
+D[1] => Mux0.IN4
+D[2] => Mux0.IN3
+D[3] => Mux0.IN2
+Y <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|ejercicio|demultiplexor:demux
+S[0] => Equal0.IN3
+S[0] => Equal1.IN3
+S[0] => Equal2.IN3
+S[0] => Equal3.IN3
+S[1] => Equal0.IN2
+S[1] => Equal1.IN2
+S[1] => Equal2.IN2
+S[1] => Equal3.IN2
+Y => Z.DATAB
+Y => Z.DATAB
+Y => Z.DATAB
+Y => Z.DATAB
+Z[0] <= Z.DB_MAX_OUTPUT_PORT_TYPE
+Z[1] <= Z.DB_MAX_OUTPUT_PORT_TYPE
+Z[2] <= Z.DB_MAX_OUTPUT_PORT_TYPE
+Z[3] <= Z.DB_MAX_OUTPUT_PORT_TYPE
+
+
