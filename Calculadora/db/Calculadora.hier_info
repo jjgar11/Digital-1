@@ -1,0 +1,89 @@
+|Calculadora
+An[0] => Sumador:SUM0.A
+An[1] => Sumador:SUM1.A
+An[2] => Sumador:SUM2.A
+Bn[0] => BComp[0].IN0
+Bn[1] => BComp[1].IN0
+Bn[2] => BComp[2].IN0
+Sn => RES.IN1
+Sn => RestaNegativa.IN1
+Sn => BComp[2].IN1
+Sn => BComp[1].IN1
+Sn => BComp[0].IN1
+Sn => Sumador:SUM0.CAnt
+RES[0] << Sumador_Parcial:RESN0.Res
+RES[1] << Sumador_Parcial:RESN1.Res
+RES[2] << Sumador_Parcial:RESN2.Res
+RES[3] << RES.DB_MAX_OUTPUT_PORT_TYPE
+NEG << RestaNegativa.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador:SUM0
+A => Res.IN0
+A => CSig.IN0
+B => Res.IN1
+B => CSig.IN1
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador:SUM1
+A => Res.IN0
+A => CSig.IN0
+B => Res.IN1
+B => CSig.IN1
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador:SUM2
+A => Res.IN0
+A => CSig.IN0
+B => Res.IN1
+B => CSig.IN1
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador_Parcial:RESN0
+A => Res.IN0
+A => CSig.IN0
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador_Parcial:RESN1
+A => Res.IN0
+A => CSig.IN0
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador_Parcial:RESN2
+A => Res.IN0
+A => CSig.IN0
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Calculadora|Sumador_Parcial:RESN3
+A => Res.IN0
+A => CSig.IN0
+CAnt => Res.IN1
+CAnt => CSig.IN1
+Res <= Res.DB_MAX_OUTPUT_PORT_TYPE
+CSig <= CSig.DB_MAX_OUTPUT_PORT_TYPE
+
+

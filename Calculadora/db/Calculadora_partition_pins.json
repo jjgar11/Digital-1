@@ -1,0 +1,57 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "RES[0]",
+					"strict" : false
+				},
+				{
+					"name" : "RES[1]",
+					"strict" : false
+				},
+				{
+					"name" : "RES[2]",
+					"strict" : false
+				},
+				{
+					"name" : "RES[3]",
+					"strict" : false
+				},
+				{
+					"name" : "NEG",
+					"strict" : false
+				},
+				{
+					"name" : "An[0]",
+					"strict" : false
+				},
+				{
+					"name" : "Bn[0]",
+					"strict" : false
+				},
+				{
+					"name" : "Bn[1]",
+					"strict" : false
+				},
+				{
+					"name" : "Sn",
+					"strict" : false
+				},
+				{
+					"name" : "An[1]",
+					"strict" : false
+				},
+				{
+					"name" : "Bn[2]",
+					"strict" : false
+				},
+				{
+					"name" : "An[2]",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
