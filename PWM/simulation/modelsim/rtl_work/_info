@@ -26,9 +26,9 @@ VgWMD`<>RFa9XG95[OPKK<3
 !s100 KKhWhX2Xal58UBB:20LF=1
 Z9 OV;C;2020.1;71
 31
-Z10 !s110 1664100544
+Z10 !s110 1664170736
 !i10b 1
-Z11 !s108 1664100544.000000
+Z11 !s108 1664170736.000000
 Z12 !s90 -reportprogress|300|-93|-work|work|/home/alph4/QuartusProjects/PWM/PWM.vhd|
 Z13 !s107 /home/alph4/QuartusProjects/PWM/PWM.vhd|
 !i113 1
@@ -57,7 +57,7 @@ R13
 R14
 R15
 Esenal_pwm
-Z16 w1664100519
+Z16 w1664129187
 R2
 R3
 R4
@@ -73,10 +73,10 @@ Vih_MhRPZJVO;7Q49LI[PE2
 !s100 Rnz1E91T9SDo@]:==C_gO3
 R9
 31
-Z19 !s110 1664100545
+R10
 !i10b 1
 R11
-Z20 !s90 -reportprogress|300|-93|-work|work|/home/alph4/QuartusProjects/PWM/senal_PWM.vhd|
+Z19 !s90 -reportprogress|300|-93|-work|work|/home/alph4/QuartusProjects/PWM/senal_PWM.vhd|
 !s107 /home/alph4/QuartusProjects/PWM/senal_PWM.vhd|
 !i113 1
 R14
@@ -89,17 +89,17 @@ R5
 R6
 DEx4 work 9 senal_pwm 0 22 ih_MhRPZJVO;7Q49LI[PE2
 !i122 1
-l32
-L21 30
-V_TZEQH@MgNRDbGIobYC<12
-!s100 @ig3SX3Ok@QDf=XF<3HmY1
+l33
+L21 31
+V9]8>OIz>KdMWg6:5HQ;fC2
+!s100 W4YM^fjjgUXQHBHZWJX9<3
 R9
 31
-R19
+R10
 !i10b 1
 R11
-R20
-Z21 !s107 /home/alph4/QuartusProjects/PWM/senal_PWM.vhd|
+R19
+Z20 !s107 /home/alph4/QuartusProjects/PWM/senal_PWM.vhd|
 !i113 1
 R14
 R15

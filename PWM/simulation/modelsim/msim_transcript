@@ -10,7 +10,7 @@
 # 
 # vcom -93 -work work {/home/alph4/QuartusProjects/PWM/PWM.vhd}
 # Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 05:09:04 on Sep 25,2022
+# Start time: 00:38:56 on Sep 26,2022
 # vcom -reportprogress 300 -93 -work work /home/alph4/QuartusProjects/PWM/PWM.vhd 
 # -- Loading package STANDARD
 # -- Loading package TEXTIO
@@ -20,11 +20,11 @@
 # -- Loading package NUMERIC_STD
 # -- Compiling entity PWM
 # -- Compiling architecture Behavioral of PWM
-# End time: 05:09:04 on Sep 25,2022, Elapsed time: 0:00:00
+# End time: 00:38:56 on Sep 26,2022, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vcom -93 -work work {/home/alph4/QuartusProjects/PWM/senal_PWM.vhd}
 # Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 05:09:04 on Sep 25,2022
+# Start time: 00:38:56 on Sep 26,2022
 # vcom -reportprogress 300 -93 -work work /home/alph4/QuartusProjects/PWM/senal_PWM.vhd 
 # -- Loading package STANDARD
 # -- Loading package TEXTIO
@@ -34,12 +34,12 @@
 # -- Loading package NUMERIC_STD
 # -- Compiling entity senal_pwm
 # -- Compiling architecture ciclo_trabajo of senal_pwm
-# End time: 05:09:05 on Sep 25,2022, Elapsed time: 0:00:01
+# End time: 00:38:56 on Sep 26,2022, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
 vsim work.pwm
 # vsim work.pwm 
-# Start time: 05:09:08 on Sep 25,2022
+# Start time: 00:39:04 on Sep 26,2022
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
@@ -48,7 +48,26 @@ vsim work.pwm
 # Loading ieee.numeric_std(body)
 # Loading work.pwm(behavioral)
 # Loading work.senal_pwm(ciclo_trabajo)
+add wave -position end  sim:/pwm/clk
+add wave -position end  sim:/pwm/nclk
 add wave -position end  sim:/pwm/led
+add wave -position 2  sim:/pwm/tau
 run
-# End time: 05:09:41 on Sep 25,2022, Elapsed time: 0:00:33
+run
+run
+run
+run
+run
+run
+run
+run
+force -freeze sim:/pwm/tau 0 0
+run
+force -freeze sim:/pwm/tau 4 0
+run
+force -freeze sim:/pwm/tau 10 0
+run
+force -freeze sim:/pwm/tau 2 0
+run
+# End time: 00:42:33 on Sep 26,2022, Elapsed time: 0:03:29
 # Errors: 0, Warnings: 0
