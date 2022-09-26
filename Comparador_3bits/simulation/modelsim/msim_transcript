@@ -1,0 +1,37 @@
+# do Comparador_3bits_run_msim_rtl_vhdl.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Modifying /opt/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini
+# 
+# vcom -93 -work work {/home/alph4/QuartusProyects/Comparador_3bits/Comparador_3bits.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 22:21:37 on Sep 17,2022
+# vcom -reportprogress 300 -93 -work work /home/alph4/QuartusProyects/Comparador_3bits/Comparador_3bits.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Loading package NUMERIC_STD
+# -- Compiling entity Comparador_3bits
+# -- Compiling architecture bit_a_bit of Comparador_3bits
+# End time: 22:21:37 on Sep 17,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+vsim work.comparador_3bits
+# vsim work.comparador_3bits 
+# Start time: 22:21:47 on Sep 17,2022
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading ieee.numeric_std(body)
+# Loading work.comparador_3bits(bit_a_bit)
+# End time: 22:22:37 on Sep 17,2022, Elapsed time: 0:00:50
+# Errors: 0, Warnings: 0
