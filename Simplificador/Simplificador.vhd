@@ -1,0 +1,86 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
+
+entity Simplificador is
+
+	port(
+--		input ports
+		A, B : in std_logic_vector(2 downto 0);
+		S: in std_logic;
+--		output ports
+		RES : out std_logic_vector(3 downto 0);
+		NEG : out std_logic
+	);
+
+end Simplificador;
+
+architecture Behavioral of Simplificador is
+
+	signal Ss : std_logic_vector(2 downto 0); 	-- Vector de 3 bits de valor S
+	signal BComp : std_logic_vector(2 downto 0);	-- B lista para ser sumada o restada
+	
+	signal CSum	: std_logic_vector(1 downto 0);	-- Carry de la suma
+	signal RSum : std_logic_vector(3 downto 0);	-- Resultado de la suma
+	
+	signal RestaNegativa : std_logic;	-- 1 si hay que restar y si B es mayor que A
+	signal RestasNegativas : std_logic_vector(3 downto 0);	-- Vector del mismo valor
+	
+--	Componente a 1 del resultado en caso de resta con resultado negativo
+	signal Comp1: std_logic_vector(3 downto 0);
+	signal CResN : std_logic_vector(2 downto 0);		-- Carry de la suma de comp a 2
+	
+	signal Result : std_logic_vector(3 downto 0);	-- Resultado final
+	
+	begin
+	
+--		Se hace un vector de valores de S
+		Ss <= (others => S);
+--		Si S=0 entonces BComp es igual a B pero si S=1 BComp es el comp a 1
+		BComp <= B xor Ss;
+	
+--		Si es resta se pasa S=1 en el carry inicial para terminal el comp a 2
+--		Si es suma se pasa S=0 en el carry inicial y se suma A con B sin cambiar
+		
+		RSum(0) <= (A(0) xor BComp(0)) xor S;
+		CSum(0) <= ((A(0) xor BComp(0)) and S) or (A(0) and BComp(0));
+		
+		RSum(1) <= (A(1) xor BComp(1)) xor CSum(0);
+		CSum(1) <= ((A(1) xor BComp(1)) and CSum(0)) or (A(1) and BComp(1));
+		
+		RSum(2) <= (A(2) xor BComp(2)) xor CSum(1);
+		RSum(3) <= ((A(2) xor BComp(2)) and CSum(1)) or (A(2) and BComp(2));
+
+--		Indicador de que es una resta con resultado negativo y vector con este valor
+		RestaNegativa <= not RSum(3) and S;
+		RestasNegativas <= (others => RestaNegativa);
+		
+--		Si es resta con res. negativo se hace comp a 1 al resultado
+--		Si no el resultado se mantiene igual
+		Comp1 <= RSum xor RestasNegativas;
+		
+--		Si es resta con res. negativo se suma 1 para comp a 2
+--		Si no se suma con 0000 y el resultado permanece igual
+
+		Result(0) <= Comp1(0) xor RestaNegativa;
+		CResN(0) <= Comp1(0) and RestaNegativa;
+		
+		Result(1) <= Comp1(1) xor CResN(0);
+		CResN(1) <= Comp1(1) and CResN(0);
+		
+		Result(2) <= Comp1(2) xor CResN(1);
+		CResN(2) <= Comp1(2) and CResN(1);
+		
+		Result(3) <= Comp1(3) xor CResN(2);
+		
+--		Se asignan el resultado a la salida
+		RES(0) 	<= Result(0);
+		RES(1) 	<= Result(1);
+		RES(2) 	<= Result(2);
+--		Si S=1 (resta) el ultimo bit se anula
+		RES(3) 	<= Result(3) and not S;
+		NEG 		<= RestaNegativa;
+
+end Behavioral;

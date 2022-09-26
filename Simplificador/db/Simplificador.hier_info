@@ -1,0 +1,24 @@
+|Simplificador
+A[0] => CSum.IN1
+A[0] => CSum.IN1
+A[1] => CSum.IN1
+A[1] => CSum.IN1
+A[2] => RSum.IN1
+A[2] => RSum.IN1
+B[0] => BComp[0].IN0
+B[1] => BComp[1].IN0
+B[2] => BComp[2].IN0
+S => RSum[0].IN1
+S => CSum.IN1
+S => RestaNegativa.IN1
+S => BComp[2].IN1
+S => BComp[1].IN1
+S => BComp[0].IN1
+S => RES.IN1
+RES[0] <= Result.DB_MAX_OUTPUT_PORT_TYPE
+RES[1] <= Result.DB_MAX_OUTPUT_PORT_TYPE
+RES[2] <= Result.DB_MAX_OUTPUT_PORT_TYPE
+RES[3] <= RES.DB_MAX_OUTPUT_PORT_TYPE
+NEG <= RestaNegativa.DB_MAX_OUTPUT_PORT_TYPE
+
+
