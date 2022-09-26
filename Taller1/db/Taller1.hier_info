@@ -1,0 +1,14 @@
+|Taller1
+a => x3.IN0
+b => x3.IN1
+c => x3.IN0
+d => x3.IN1
+e => x3.IN0
+f => x3.IN1
+g => x3.IN0
+h => x3.IN1
+x1 <= <GND>
+x2 <= <GND>
+x3 <= x3.DB_MAX_OUTPUT_PORT_TYPE
+
+

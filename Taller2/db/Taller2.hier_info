@@ -1,0 +1,22 @@
+|Taller2
+Lh => A.IN0
+Lh => Vi.IN0
+Lh => Vi.IN1
+Lh => H.IN1
+Ll => Vo.IN1
+Ll => H.IN1
+Ll => A.IN1
+Th => Vi.IN0
+Th => A.IN1
+Th => Vi.IN1
+Th => Vo.IN0
+Th => H.IN0
+Tl => H.IN1
+Tl => Vi.IN1
+Tl => Vo.IN1
+Vi <= Vi.DB_MAX_OUTPUT_PORT_TYPE
+Vo <= Vo.DB_MAX_OUTPUT_PORT_TYPE
+H <= H.DB_MAX_OUTPUT_PORT_TYPE
+A <= A.DB_MAX_OUTPUT_PORT_TYPE
+
+

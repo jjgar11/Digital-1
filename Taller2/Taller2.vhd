@@ -1,0 +1,27 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
+
+entity Taller2 is
+
+	port(
+--		input ports
+		Lh,Ll,Th,Tl : in std_logic;
+--		output ports
+		Vi,Vo,H,A : out std_logic
+	);
+	
+end Taller2;
+
+architecture Behavioral of Taller2 is
+	
+	begin 
+	
+	Vi <= (not Th and not Lh) or (Th and not Tl and not Lh);
+	Vo <= not Th and not Tl and Ll;
+	H <= (not Th and Tl and not Lh) or (not Th and Tl and Ll);
+	A <= Th or (Lh and not Ll);
+	
+end Behavioral;

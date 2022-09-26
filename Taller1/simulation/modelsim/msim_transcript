@@ -1,0 +1,79 @@
+# do Taller1_run_msim_rtl_vhdl.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Modifying /opt/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini
+# 
+# vcom -93 -work work {/home/alph4/QuartusProyects/Taller1/Taller1.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 23:37:34 on Aug 31,2022
+# vcom -reportprogress 300 -93 -work work /home/alph4/QuartusProyects/Taller1/Taller1.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Loading package NUMERIC_STD
+# -- Compiling entity Taller1
+# -- Compiling architecture numeralC of Taller1
+# End time: 23:37:34 on Aug 31,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+vsim work.taller1
+# vsim work.taller1 
+# Start time: 23:37:38 on Aug 31,2022
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading ieee.numeric_std(body)
+# Loading work.taller1(numeralc)
+add wave -position insertpoint sim:/taller1/*
+force -freeze sim:/taller1/a 1 0, 0 {1600 ps} -r 3200
+force -freeze sim:/taller1/b 1 0, 0 {800 ps} -r 1600
+force -freeze sim:/taller1/c 1 0, 0 {400 ps} -r 800
+force -freeze sim:/taller1/d 1 0, 0 {200 ps} -r 400
+force -freeze sim:/taller1/e 1 0, 0 {100 ps} -r 200
+force -freeze sim:/taller1/f 1 0, 0 {50 ps} -r 100
+force -freeze sim:/taller1/g 1 0, 0 {25 ps} -r 50
+force -freeze sim:/taller1/h 1 0, 0 {12 ps} -r 25
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# Can't move the Now cursor.
+# End time: 23:43:01 on Aug 31,2022, Elapsed time: 0:05:23
+# Errors: 0, Warnings: 0
