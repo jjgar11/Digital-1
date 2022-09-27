@@ -10,7 +10,7 @@ entity PWM is
 		-- input ports
 		nUp : in std_logic;
 		nDown : in std_logic;
-		-- clk : in std_logic;
+		clk : in std_logic;
 
 		-- output ports
 		Led : out std_logic
@@ -27,12 +27,13 @@ architecture Behavioral of PWM is
 	signal Down : std_logic;
 
 	-- Se simula el clock de la FPGA
-	constant ClockFrequency : integer := 50e6; -- 50 MHz
-    constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
+    -- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
 
 	constant T : integer := 10;
 
-	signal clk, nclk, clk_div : std_logic := '1';
+	-- signal clk : std_logic := '1';
+	signal nclk, clk_div : std_logic := '1';
 	signal sled : std_logic := '0';
 	signal tau : integer range 0 to 10 := 2;
 	signal increase, decrease : std_logic := '0';
@@ -84,14 +85,14 @@ architecture Behavioral of PWM is
 
 begin
 
-	-- En simulacion
-	clk <= not clk after ClockPeriod / 2;
-	Up <= nUp;
-	Down <= nDown;
+	-- * En simulacion
+	-- clk <= not clk after ClockPeriod / 2;
+	-- Up <= nUp;
+	-- Down <= nDown;
 
-	-- En FPGA
-	-- Up <= not nUp;
-	-- Down <= not nDown;
+	-- * En FPGA
+	Up <= not nUp;
+	Down <= not nDown;
 
 	-- * Cree instancias del divisor de frecuencia para generar la señal de muestreo de los antirrebote
 	--   y la señal de reloj del registro que almacenará el conteo del pwm.
@@ -120,7 +121,7 @@ begin
 
 	-- * Conecte las instancias con las señales internas (intermedias) que declaró.
 
-	-- Led <= not sled;			-- En FPGA
-	Led <= sled;				-- En simulacion
+	-- Led <= sled;				-- En simulacion
+	Led <= not sled;			-- En FPGA
 
 end Behavioral;
