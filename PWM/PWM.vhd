@@ -34,8 +34,8 @@ architecture Behavioral of PWM is
 	signal nclk : std_logic := '1';
 	signal clk_div : std_logic := '1';
 	signal sled : std_logic := '1';
-	signal tau : integer range 0 to 15 := 2;
---	signal tau_mod : integer 
+	signal tau : integer range 0 to 10 := 2;
+	signal tau_mod : integer range 0 to 10;
 
 	-- * Declare el componente del divisor de frecuencia y del antirrebote.
 	

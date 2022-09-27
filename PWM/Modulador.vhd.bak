@@ -57,18 +57,10 @@ begin
 	begin
 		if rising_edge(Up) then
 			if tau = 10 then
-				ntau <= tau;
+				ntau <= 0;
 			else 
-				ntau <= (tau + 2);
+				ntau <= (tau + 2) mod 10;
 			end if;
-		-- end if;
-
-		-- elsif rising_edge(Down) then
-		-- 	if tau /= 0 then
-		-- 		ntau <= (tau - 2);
-		-- 	else 
-		-- 		ntau <= ntau;
-		-- 	end if;
 		end if;
 
 	end process;
