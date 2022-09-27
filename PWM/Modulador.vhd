@@ -25,6 +25,7 @@ entity Modulador is
 
 	port(
 		-- input ports
+		clk : in std_logic;
 		Up : in std_logic;
 		Down : in std_logic;
 		tau : in integer range 0 to 10;
@@ -52,23 +53,16 @@ begin
 
 --	ntau <= tau;
 	
-	process(Up, Down)
+	process(clk)
 
 	begin
-		if rising_edge(Up) then
-			if tau = 10 then
-				ntau <= tau;
-			else 
+		if rising_edge(clk) then
+			if Up = '1' and tau < 10 then
 				ntau <= (tau + 2);
 			end if;
-		-- end if;
-
-		-- elsif rising_edge(Down) then
-		-- 	if tau /= 0 then
-		-- 		ntau <= (tau - 2);
-		-- 	else 
-		-- 		ntau <= ntau;
-		-- 	end if;
+			if Down = '1' and tau > 0 then
+				ntau <=  (tau - 2);
+			end if;
 		end if;
 
 	end process;
