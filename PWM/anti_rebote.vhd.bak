@@ -24,7 +24,7 @@ end anti_rebote;
 architecture registro of anti_rebote is
 
 	-- * Declare una señal vector de longitud mayor a 3 bits (este será el registro de desplazamiento).
-	signal reg : std_logic_vector(5 downto 0) := "000000";
+	signal reg : std_logic_vector(5 downto 1) := "000000";
 
 begin
 
@@ -67,6 +67,6 @@ begin
 
 	end process;
 
-	isOn <= not reg(5) and not reg(4) and not reg(3) and reg(2) and reg(1) and reg(0);
+	isOn <= reg(5) and reg(4) and reg(3) and not reg(2) and not reg(1) and not reg(0);
 
 end registro;
