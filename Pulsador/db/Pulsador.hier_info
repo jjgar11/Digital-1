@@ -1,5 +1,0 @@
-|Pulsador
-P => q.CLK
-LED <= q.DB_MAX_OUTPUT_PORT_TYPE
-
-
