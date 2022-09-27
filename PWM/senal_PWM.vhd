@@ -27,9 +27,8 @@ architecture ciclo_trabajo of senal_pwm is
 	-- Pista: Su diseño es muy parecido al del divisor de frecuencia.
     
     -- constant a : integer := T;
-    signal cuenta2 : integer range 1 to 10;
-    signal cuenta : integer range 0 to 9;
-    signal O : std_logic := '1';
+    signal cuenta : natural range 1 to 10;
+    -- signal O : std_logic := '1';
 
     begin
 
@@ -48,19 +47,19 @@ architecture ciclo_trabajo of senal_pwm is
             -- end if;
             
             if rising_edge(clk) then
-                if cuenta = (T-1) then
-                    cuenta <= 0;
+                if cuenta >= T then
+                    cuenta <= 1;
                 else
                     cuenta <= cuenta + 1;
                 end if;
-                if cuenta < tau then
-                    O <= '1';
-                else
-                    O <= '0';
-                end if;
+                -- if cuenta < tau then
+                --     O <= '1';
+                -- else
+                --     O <= '0';
+                -- end if;
             end if;
 
         end process;
-        pwm <= O;
+        pwm <= '1' when cuenta <= tau else '0';
 
 end ciclo_trabajo;
