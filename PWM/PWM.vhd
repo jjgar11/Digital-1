@@ -13,7 +13,8 @@ entity PWM is
 		clk : in std_logic;
 
 		-- output ports
-		Led : out std_logic
+		Led : out std_logic;
+		Led_conteo : out std_logic
 	);
 
 end PWM;
@@ -66,7 +67,6 @@ architecture Behavioral of PWM is
 			Up : in std_logic;
 			Down : in std_logic;
 			tau : in integer range 0 to 10;
-			-- clk : in std_logic;
 
 			-- output ports
 			tau_mod : out integer range 0 to 10
@@ -98,7 +98,7 @@ begin
 	--   y la señal de reloj del registro que almacenará el conteo del pwm.
 
 	div_pulsador : div_frec
-	port map(clk,2500,clk_div);
+	port map(clk,1e6,clk_div);
 
 	-- * Cree instancias del antirrebote para el pulsador de aumento y de reducción de tau.
 
@@ -114,12 +114,14 @@ begin
 	port map(clk_div,increase,decrease,tau,tau);
 
 	div_1Hz : div_frec
-	port map(clk,25e3,nclk);
+	port map(clk,25e6,nclk);
 	
 	senal : senal_PWM
 	port map(tau,T,nclk,sled);
 
 	-- * Conecte las instancias con las señales internas (intermedias) que declaró.
+
+	led_conteo <= not nclk;
 
 	-- Led <= sled;				-- En simulacion
 	Led <= not sled;			-- En FPGA

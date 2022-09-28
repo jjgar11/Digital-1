@@ -29,7 +29,6 @@ entity Modulador is
 		Up : in std_logic;
 		Down : in std_logic;
 		tau : in integer range 0 to 10;
-		-- clk : in std_logic;
 
 		-- output ports
 		tau_mod : out integer range 0 to 10
@@ -50,12 +49,10 @@ begin
 	-- pulsos de entrada.
 
 	-- Puede usar los operadores matemáticos que necesite. No trabaje con números decimales.
-
---	ntau <= tau;
 	
 	process(clk)
-
 	begin
+
 		if rising_edge(clk) then
 			if Up = '1' and tau < 10 then
 				ntau <= (tau + 2);
@@ -67,6 +64,6 @@ begin
 
 	end process;
 
-	 tau_mod <= ntau;
+	tau_mod <= ntau;
 	
 end Modtau;
