@@ -18,7 +18,7 @@ entity div_frec is
 end div_frec;
 
 
-architecture divisor of div_frec is
+architecture Behavioral of div_frec is
 
 	signal cuenta: integer range 1 to 25000000 := 1;
 	signal salida: std_logic := '1';
@@ -42,4 +42,4 @@ begin
 	
 	f <= salida;
 
-end divisor;
+end Behavioral;
