@@ -24,7 +24,7 @@ architecture Behavioral of senal_contador is
 	signal flp_4 : std_logic := '0';
 	signal flp_5 : std_logic := '0';
 	signal flp_6 : std_logic := '0';
-	signal limit : std_logic;
+	signal limit : std_logic_vector(5 downto 0);
 
 begin
 	limit <= flp_6 and flp_5 and flp_4 and flp_2 and flp_1;
