@@ -16,7 +16,7 @@ entity anti_rebote is
 end anti_rebote;
 
 
-architecture registro of anti_rebote is
+architecture Behavioral of anti_rebote is
 
 	signal reg : std_logic_vector(5 downto 0) := "000000";
 
@@ -33,4 +33,4 @@ begin
 
 	isOn <= not reg(5) and not reg(4) and not reg(3) and reg(2) and reg(1) and reg(0);
 
-end registro;
+end Behavioral;

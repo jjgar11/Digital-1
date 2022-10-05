@@ -33,7 +33,7 @@ architecture Behavioral of Contador is
 	signal nclk, clk_rebote : std_logic := '1';
 	signal ar_Start, ar_Stop, ar_Reset: std_logic := '0';
 
-	signal cuenta : std_logic_vector(5 downto 0);
+	signal cuente : std_logic_vector(5 downto 0);
 
 	-- * Componente de divisor de frecuencia y antirrebote.
 	
@@ -92,7 +92,7 @@ begin
 	port map(clk,25e3,nclk);
 
 	senal : senal_contador
-	port map(nclk,ar_Reset,cuenta);
+	port map(nclk,ar_Reset,cuenta)
 
 	Led_conteo <= not nclk;
 
