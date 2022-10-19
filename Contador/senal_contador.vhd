@@ -12,37 +12,33 @@ entity senal_contador is
 		bin_cuenta : out std_logic_vector(5 downto 0)
 	);
 
-		
 end senal_contador;
 
 
 architecture Behavioral of senal_contador is
 
-	signal flp_1 : std_logic := '0';
-	signal flp_2 : std_logic := '0';
-	signal flp_3 : std_logic := '0';
-	signal flp_4 : std_logic := '0';
-	signal flp_5 : std_logic := '0';
-	signal flp_6 : std_logic := '0';
+	signal flp : std_logic_vector(5 downto 0) := "000000";
 	signal limit : std_logic;
+	signal Reset_vec : std_logic_vector(5 downto 0);
 
 begin
-	limit <= flp_6 and flp_5 and flp_4 and flp_2 and flp_1;
+	limit <= flp(5) and flp(4) and flp(3) and flp(1) and flp(0);
+	Reset_vec <= (others => Reset);
 
 	process(clk)
 	begin
-        
+
 		if rising_edge(clk) then
-			flp_1 <= (not flp_1);
-            flp_2 <= flp_2 xor (flp_1);
-            flp_3 <= limit xor (flp_3 xor (flp_1 and flp_2));
-            flp_4 <= flp_4 xor (limit or (flp_1 and flp_2 and flp_3));
-            flp_5 <= flp_5 xor (limit or (flp_1 and flp_2 and flp_3 and flp_4));
-            flp_6 <= flp_6 xor (limit or (flp_1 and flp_2 and flp_3 and flp_4 and flp_5));
+			flp(0) <= (not flp(0));
+			flp(1) <= flp(1) xor (flp(0));
+			flp(2) <= limit xor (flp(2) xor (flp(0) and flp(1)));
+			flp(3) <= limit xor (flp(3) xor (flp(0) and flp(1) and flp(2)));
+			flp(4) <= limit xor (flp(4) xor (flp(0) and flp(1) and flp(2) and flp(3)));
+			flp(5) <= limit xor (flp(5) xor (flp(0) and flp(1) and flp(2) and flp(3) and flp(4)));
 		end if;
 
 	end process;
 
-    bin_cuenta <= flp_6 & flp_5 & flp_4 & flp_3 & flp_2 & flp_1; 
+	bin_cuenta <= flp and not Reset_vec;
 
 end Behavioral;
