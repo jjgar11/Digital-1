@@ -32,6 +32,7 @@ architecture Behavioral of Contador is
 	signal clk : std_logic := '1';
 	signal nclk, clk_rebote : std_logic := '1';
 	signal ar_Start, ar_Stop, ar_Reset: std_logic := '0';
+	signal run : std_logic := '1';
 
 	signal cuenta : std_logic_vector(5 downto 0);
 
@@ -54,10 +55,20 @@ architecture Behavioral of Contador is
 		);
 	end component;
 
+	component control
+		port(
+			clk : in std_logic;
+			Start : in std_logic;
+			Stop : in std_logic;
+			Run : out std_logic
+		);
+	end component;
+
 	component senal_contador
 		port(
 			clk : in std_logic;
 			Reset : in std_logic;
+			Run : in std_logic;
 			bin_cuenta : out std_logic_vector(5 downto 0)
 		);
 	end component;	
@@ -84,6 +95,9 @@ begin
 	reboteStop : anti_rebote
 	port map(clk_rebote,Stop,ar_Stop);
 
+	runControl : control
+	port map(clk_rebote,ar_Start,ar_Stop,run);
+
 	reboteReset : anti_rebote
 	port map(clk_rebote,Reset,ar_Reset);
     
@@ -92,7 +106,7 @@ begin
 	port map(clk,25e3,nclk);
 
 	senal : senal_contador
-	port map(nclk,ar_Reset,cuenta);
+	port map(nclk,ar_Reset,run,cuenta);
 
 	Led_conteo <= not nclk;
 

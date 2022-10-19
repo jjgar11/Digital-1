@@ -9,6 +9,7 @@ entity senal_contador is
 	port(
 		clk : in std_logic;
 		Reset : in std_logic;
+		Run : in std_logic;
 		bin_cuenta : out std_logic_vector(5 downto 0)
 	);
 
@@ -38,12 +39,12 @@ begin
 	limit <= flp(5) and flp(4) and flp(3) and flp(1) and flp(0);
 	Reset_vec <= (others => Reset);
 
-	cond(0) <= '1';
-	cond(1) <= flp(0);
-	cond(2) <= (flp(0) and flp(1)) and not limit;
-	cond(3) <= (flp(0) and flp(1) and flp(2)) or limit;
-	cond(4) <= (flp(0) and flp(1) and flp(2) and flp(3)) or limit;
-	cond(5) <= (flp(0) and flp(1) and flp(2) and flp(3) and flp(4)) or limit;
+	cond(0) <= Run and ('1');
+	cond(1) <= Run and (flp(0));
+	cond(2) <= Run and ((flp(0) and flp(1)) and not limit);
+	cond(3) <= Run and ((flp(0) and flp(1) and flp(2)) or limit);
+	cond(4) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3)) or limit);
+	cond(5) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3) and flp(4)) or limit);
 
 	flp_0 : flp_jk
 	port map(cond(0),cond(0),clk,flp(0));
