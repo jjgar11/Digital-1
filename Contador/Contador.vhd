@@ -10,7 +10,7 @@ entity Contador is
 		-- input ports
 		nStart : in std_logic;
 		nStop : in std_logic;
-		nReset : in std_logic;
+		nReset : in std_logic := '0';
 		-- clk : in std_logic;
 
 		-- output ports
