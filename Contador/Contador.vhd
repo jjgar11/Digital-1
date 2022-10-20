@@ -122,8 +122,8 @@ begin
 	-- Reset <= not nReset;
 
 	div_pulsador : div_frec
-	port map(clk,5e3,clk_rebote);
-	-- port map(clk,1e6,clk_rebote);
+	-- port map(clk,5e3,clk_rebote);
+	port map(clk,1e6,clk_rebote);
 
 	reboteStart : anti_rebote
 	port map(clk_rebote,Start,ar_Start);
@@ -142,8 +142,8 @@ begin
     
 
 	div_1Hz : div_frec
-	port map(clk,25e3,nclk);
-	-- port map(clk,25e6,nclk);
+	-- port map(clk,25e3,nclk);
+	port map(clk,25e6,nclk);
 
 	senal : senal_contador
 	port map(nclk,ext_reset,run,cuenta);
