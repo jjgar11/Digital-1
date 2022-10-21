@@ -8,11 +8,11 @@ entity Contador is
 
 	port(
 		-- input ports
-		nStart : in std_logic := '0';
-		nStop : in std_logic := '0';
-		nReset : in std_logic := '0';
-		nLimit : in std_logic_vector(5 downto 0) := "111011";
-		-- clk : in std_logic;
+		nStart : in std_logic; -- := '0';
+		nStop : in std_logic; -- := '0';
+		nReset : in std_logic; -- := '0';
+		nLimit : in std_logic_vector(5 downto 0); -- := "111011";
+		clk : in std_logic;
 
 		-- output ports
 		enable : out std_logic_vector(1 downto 0);
@@ -30,12 +30,12 @@ architecture Behavioral of Contador is
 	signal Limit : std_logic_vector(5 downto 0);
 
 	-- Se simula el clock de la FPGA
-	constant ClockFrequency : integer := 50e6; -- 50 MHz
-	constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
+	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
 
-	signal clk : std_logic := '1';
+	-- signal clk : std_logic := '1';
 	signal nclk, clk_rebote : std_logic := '1';
-	signal clk_segment : std_logic := '1';
+	signal clk_segment, clk_bin : std_logic := '1';
 	signal ar_Start, ar_Stop, ar_Reset: std_logic := '0';
 	signal ext_reset : std_logic := '0';
 	signal run : std_logic := '1';
@@ -114,21 +114,21 @@ architecture Behavioral of Contador is
 begin
 
 	-- * En simulacion
-	clk <= not clk after ClockPeriod / 2;
-	Start <= nStart;
-	Stop <= nStop;
-	Reset <= nReset;
-	Limit <= nLimit;
+	-- clk <= not clk after ClockPeriod / 2;
+	-- Start <= nStart;
+	-- Stop <= nStop;
+	-- Reset <= nReset;
+	-- Limit <= nLimit;
 
 	-- * En FPGA
-	-- Start <= not nStart;
-	-- Stop <= not nStop;
-	-- Reset <= not nReset;
-	-- Limit <= not nLimit;
+	Start <= not nStart;
+	Stop <= not nStop;
+	Reset <= not nReset;
+	Limit <= not nLimit;
 
 	div_pulsador : div_frec
-	port map(clk,5e3,clk_rebote);
-	-- port map(clk,1e6,clk_rebote);
+	-- port map(clk,5e3,clk_rebote);
+	port map(clk,1e6,clk_rebote);
 
 	reboteStart : anti_rebote
 	port map(clk_rebote,Start,ar_Start);
@@ -147,17 +147,20 @@ begin
     
 
 	div_1Hz : div_frec
-	port map(clk,25e3,nclk);
-	-- port map(clk,25e6,nclk);
+	-- port map(clk,25e3,nclk);
+	port map(clk,25e6,nclk);
 
 	senal : senal_contador
 	port map(nclk,ext_reset,run,Limit,cuenta);
 
 	div_sietesegmetos : div_frec
 	port map(clk,20e4,clk_segment);
+	
+	div_bin : div_frec
+	port map(clk,25e2,clk_bin);
 
 	code : bin_bcd
-	port map(clk_rebote,cuenta,codigo0,codigo1);
+	port map(clk_bin,cuenta,codigo0,codigo1);
 	
 	nixie : bcd_7seg
 	port map(clk_segment,codigo0,codigo1,enable,segmento_siete);

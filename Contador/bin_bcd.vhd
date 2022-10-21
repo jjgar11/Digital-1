@@ -23,7 +23,7 @@ architecture Behavioral of bin_bcd is
 	signal bcdsig0: std_logic_vector(7 downto 0) := "00000000";
 	signal sum: std_logic := '0';
 	signal index: integer range 0 to 6 := 6;
-	signal binario_reg: std_logic_vector(5 downto 0) := "000000";
+	signal binario_reg: std_logic_vector(5 downto 0); -- := "000000";
 	
 begin
 
