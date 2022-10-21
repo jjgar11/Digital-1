@@ -17,7 +17,7 @@ end reset_mod;
 
 architecture Behavioral of reset_mod is
 	
-    signal reg : std_logic_vector(24 downto 0);
+    signal reg : std_logic_vector(4 downto 0) := "00000";
 
 begin
 
@@ -28,12 +28,12 @@ begin
 			if Reset = '1' then
 				reg <= (others => Reset);
 			else
-				reg <= reg(23 downto 0) & '0';
+				reg <= reg(3 downto 0) & '0';
 			end if;
 		end if;
 
 	end process;
 
-	ext_reset <= reg(24);
+	ext_reset <= reg(4);
 	
 end Behavioral;

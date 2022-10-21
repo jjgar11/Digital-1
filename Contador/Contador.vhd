@@ -11,6 +11,7 @@ entity Contador is
 		nStart : in std_logic := '0';
 		nStop : in std_logic := '0';
 		nReset : in std_logic := '0';
+		nLimit : in std_logic_vector(5 downto 0) := "111011";
 		-- clk : in std_logic;
 
 		-- output ports
@@ -26,6 +27,7 @@ architecture Behavioral of Contador is
 	signal Start : std_logic;
 	signal Stop : std_logic;
 	signal Reset : std_logic;
+	signal Limit : std_logic_vector(5 downto 0);
 
 	-- Se simula el clock de la FPGA
 	constant ClockFrequency : integer := 50e6; -- 50 MHz
@@ -85,6 +87,7 @@ architecture Behavioral of Contador is
 			clk : in std_logic;
 			Reset : in std_logic;
 			Run : in std_logic;
+			Limit : in std_logic_vector(5 downto 0);
 			bin_cuenta : out std_logic_vector(5 downto 0)
 		);
 	end component;	
@@ -115,15 +118,17 @@ begin
 	Start <= nStart;
 	Stop <= nStop;
 	Reset <= nReset;
+	Limit <= nLimit;
 
 	-- * En FPGA
 	-- Start <= not nStart;
 	-- Stop <= not nStop;
 	-- Reset <= not nReset;
+	-- Limit <= not nLimit;
 
 	div_pulsador : div_frec
-	-- port map(clk,5e3,clk_rebote);
-	port map(clk,1e6,clk_rebote);
+	port map(clk,5e3,clk_rebote);
+	-- port map(clk,1e6,clk_rebote);
 
 	reboteStart : anti_rebote
 	port map(clk_rebote,Start,ar_Start);
@@ -142,11 +147,11 @@ begin
     
 
 	div_1Hz : div_frec
-	-- port map(clk,25e3,nclk);
-	port map(clk,25e6,nclk);
+	port map(clk,25e3,nclk);
+	-- port map(clk,25e6,nclk);
 
 	senal : senal_contador
-	port map(nclk,ext_reset,run,cuenta);
+	port map(nclk,ext_reset,run,Limit,cuenta);
 
 	div_sietesegmetos : div_frec
 	port map(clk,20e4,clk_segment);
