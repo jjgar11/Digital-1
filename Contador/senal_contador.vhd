@@ -37,14 +37,14 @@ architecture Behavioral of senal_contador is
 begin
 
 	limit <= flp(5) and flp(4) and flp(3) and flp(1) and flp(0);
-	Reset_vec <= (others => Reset);
+	Reset_vec <= (others => (Reset or (Limit and Run)));
 
-	cond(0) <= Run and ('1');
+	cond(0) <= Run;
 	cond(1) <= Run and (flp(0));
-	cond(2) <= Run and ((flp(0) and flp(1)) and not limit);
-	cond(3) <= Run and ((flp(0) and flp(1) and flp(2)) or limit);
-	cond(4) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3)) or limit);
-	cond(5) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3) and flp(4)) or limit);
+	cond(2) <= Run and ((flp(0) and flp(1)));
+	cond(3) <= Run and ((flp(0) and flp(1) and flp(2)));
+	cond(4) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3)));
+	cond(5) <= Run and ((flp(0) and flp(1) and flp(2) and flp(3) and flp(4)));
 
 	j <= cond and not Reset_vec;
 	k <= cond or Reset_vec;
