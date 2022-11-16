@@ -25,7 +25,7 @@ architecture Behavioral of Proyecto is
 	signal clk : std_logic := '1';
 
 	signal nclk, clk_rebote : std_logic := '1';
-	signal St : std_logic := '0';
+	signal St, Di : std_logic := '0';
 	signal B : std_logic_vector(0 to 3) := "0001";
 
     component div_frec
@@ -43,6 +43,7 @@ architecture Behavioral of Proyecto is
         port(
             clk : in std_logic;
             St : in std_logic;
+			Di : in std_logic;
             Bin : in std_logic_vector(3 downto 0);
             Bout : out std_logic_vector(3 downto 0)
         );
@@ -55,7 +56,7 @@ begin
 	port map(clk,143e3,nclk);
 
 	motor : PAP_motor
-	port map(nclk,St,B,B);
+	port map(nclk,St,Di,B,B);
 
 	BO <= B;
 
