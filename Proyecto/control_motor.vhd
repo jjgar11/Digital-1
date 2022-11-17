@@ -19,7 +19,7 @@ end control_motor;
 
 architecture Behavioral of control_motor is
 
-	signal contador : integer := 0;
+	signal contadorCiclos, contadorPausa: integer := 0;
 	signal nSt : std_logic := '0';
 	signal nDi : std_logic := '0';
 
@@ -41,14 +41,19 @@ begin
 	begin
 
 		if rising_edge(clk) then
-			if contador <= 20 then
-				contador <= contador + 1;
+			if contadorCiclos <= 500 then
+				contadorCiclos <= contadorCiclos + 1;
 				nSt <= StIn;
-				nDi <=  DiIn;
+				nDi <= DiIn;
 			else
-				contador <= 0;
-				nSt <=  StIn;
-				nDi <=  not DiIn;
+				contadorCiclos <= 0;
+				nSt <= not StIn;
+				nDi <= not DiIn;
+				if contadorPausa <= 250 then
+					contadorPausa <= contadorPausa + 1;
+				else
+					contadorPausa <= 0;
+				end if;
 			end if;
 		end if;
 
