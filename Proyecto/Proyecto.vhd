@@ -7,7 +7,7 @@ use ieee.numeric_std.all;
 entity Proyecto is
 
 	port(
-		-- clk : in std_logic;
+		clk : in std_logic;
 		-- St : in std_logic;
 		BO : out std_logic_vector(3 downto 0)
 	);
@@ -18,11 +18,10 @@ end Proyecto;
 
 architecture Behavioral of Proyecto is
 
-
 	-- Se simula el clock de la FPGA
-	constant ClockFrequency : integer := 50e6; -- 50 MHz
-	constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
-	signal clk : std_logic := '1';
+	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
+	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	-- signal clk : std_logic := '1';
 
 	signal nclk, clk_rebote : std_logic := '1';
 	signal St, Di : std_logic := '0';
@@ -61,9 +60,9 @@ architecture Behavioral of Proyecto is
 
 begin
 
-	clk <= not clk after ClockPeriod / 2;
+	-- clk <= not clk after ClockPeriod / 2;
 	div1 : div_frec
-	port map(clk,1e3,nclk);
+	port map(clk,100e3,nclk);
 
 	control : control_motor
 	port map(nclk,St,Di,St,Di);

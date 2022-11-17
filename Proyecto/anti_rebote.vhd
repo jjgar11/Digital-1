@@ -12,7 +12,6 @@ entity anti_rebote is
 		isOn : out std_logic
 	);
 
-		
 end anti_rebote;
 
 
@@ -24,7 +23,7 @@ begin
 
 	process(clk)
 	begin
-        
+		
 		if rising_edge(clk) then
 			reg <= reg(4 downto 0) & Button;
 		end if;

@@ -20,7 +20,7 @@ end flp_jk;
 
 architecture Behavioral of flp_jk is
 	
-    signal Q0 : std_logic := '0';
+	signal Q0 : std_logic := '0';
 
 begin
 
@@ -29,16 +29,17 @@ begin
 		
 		if rising_edge(clk) then 
 		
-            if j = '0' and k = '0' then
-                Q0 <= Q0;
-            elsif j = '1' and k = '0' then
-                Q0 <= '1';
-            elsif j = '0' and k = '1' then
-                Q0 <= '0';
-            elsif j = '1' and k = '1' then
-                Q0 <= not Q0;
-            end if;
-        end if;
+			if j = '0' and k = '0' then
+				Q0 <= Q0;
+			elsif j = '1' and k = '0' then
+				Q0 <= '1';
+			elsif j = '0' and k = '1' then
+				Q0 <= '0';
+			elsif j = '1' and k = '1' then
+				Q0 <= not Q0;
+			end if;
+			
+		end if;
 
 	end process;
 	
