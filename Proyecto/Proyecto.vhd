@@ -12,7 +12,7 @@ entity Proyecto is
 		BO : out std_logic_vector(3 downto 0)
 	);
 
-		
+
 end Proyecto;
 
 
@@ -28,32 +28,45 @@ architecture Behavioral of Proyecto is
 	signal St, Di : std_logic := '0';
 	signal B : std_logic_vector(0 to 3) := "0001";
 
-    component div_frec
+	component div_frec
 		port(
-            -- Input ports
-            clk: in  std_logic;
-		    Nciclos: in	integer;
-		
-	    	-- Output ports
-    		f: out std_logic
+			-- Input ports
+			clk: in  std_logic;
+			Nciclos: in	integer;
+
+			-- Output ports
+			f: out std_logic
 		);
 	end component;
 
-    component PAP_motor
-        port(
-            clk : in std_logic;
-            St : in std_logic;
+    component control_motor
+		port(
+			clk : in std_logic;
+			StIn : in std_logic;
+			DiIn : in std_logic;
+			StOut : out std_logic;
+			DiOut : out std_logic
+		);
+	end component;
+
+	component PAP_motor
+		port(
+			clk : in std_logic;
+			St : in std_logic;
 			Di : in std_logic;
-            Bin : in std_logic_vector(3 downto 0);
-            Bout : out std_logic_vector(3 downto 0)
-        );
+			Bin : in std_logic_vector(3 downto 0);
+			Bout : out std_logic_vector(3 downto 0)
+		);
 	end component;
 
 begin
 
 	clk <= not clk after ClockPeriod / 2;
 	div1 : div_frec
-	port map(clk,143e3,nclk);
+	port map(clk,1e3,nclk);
+
+	control : control_motor
+	port map(nclk,St,Di,St,Di);
 
 	motor : PAP_motor
 	port map(nclk,St,Di,B,B);
