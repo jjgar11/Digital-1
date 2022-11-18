@@ -10,6 +10,7 @@ entity control_motor is
 		clk : in std_logic;
 		StIn : in std_logic;
 		DiIn : in std_logic;
+		B : in std_logic_vector(0 to 3);
 		StOut : out std_logic;
 		DiOut : out std_logic
 	);
@@ -19,7 +20,10 @@ end control_motor;
 
 architecture Behavioral of control_motor is
 
-	signal contadorCiclos, contadorPausa: integer := 0;
+	signal contadorCiclos : integer := 1;
+	signal contadorPausa : integer := 0;
+	signal flag : std_logic;
+	signal Banterior : std_logic_vector(0 to 3);
 	signal nSt : std_logic := '0';
 	signal nDi : std_logic := '0';
 
@@ -37,21 +41,26 @@ architecture Behavioral of control_motor is
 
 begin
 
-	process(clk)
+	-- flag <= B and Banterior;
+	process(clk,flag)
 	begin
 
 		if rising_edge(clk) then
-			if contadorCiclos <= 500 then
+		-- 	Banterior <= B;
+		-- end if;
+
+		-- if rising_edge(flag) then
+			if contadorCiclos < 20-1 then
 				contadorCiclos <= contadorCiclos + 1;
-				nSt <= StIn;
-				nDi <= DiIn;
+				nSt <= '0';
+				nDi <= '0';
 			else
-				contadorCiclos <= 0;
-				nSt <= not StIn;
-				nDi <= not DiIn;
-				if contadorPausa <= 250 then
+				nSt <= '1';
+				nDi <= '1';
+				if contadorPausa < 10-1 then
 					contadorPausa <= contadorPausa + 1;
 				else
+					contadorCiclos <= 1;
 					contadorPausa <= 0;
 				end if;
 			end if;
