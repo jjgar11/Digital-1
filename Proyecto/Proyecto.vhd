@@ -66,6 +66,7 @@ architecture Behavioral of Proyecto is
 	component teclado
 		port( 
 			clk: in std_logic;
+			clk_ar : in std_logic;
 			columnas: in std_logic_vector(3 downto 0);
 			
 			filas: out std_logic_vector(3 downto 0); -- Enable 4 digit
@@ -79,8 +80,8 @@ begin
 	div1 : div_frec
 	port map(clk,100e3,nclk);
 
-	-- div2 : div_frec
-	-- port map(clk,200e3,clk_ar);
+	div2 : div_frec
+	port map(clk,1e2,clk_ar);
 
 	div3 : div_frec
 	port map(clk,1e3,clk_tc);
@@ -92,7 +93,7 @@ begin
 	port map(nclk,St,Di,B,B);
 
 	tecladito : teclado
-	port map(clk_tc,columna,fila,disp7seg);
+	port map(clk_tc,clk_ar,columna,fila,disp7seg);
 
 	BO <= B;
 

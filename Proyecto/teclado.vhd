@@ -8,6 +8,7 @@ entity teclado is
 
 	port( 
 		clk: in std_logic;
+		clk_ar: in std_logic;
 		columnas: in std_logic_vector(3 downto 0);
 		
 		filas: out std_logic_vector(3 downto 0);
@@ -18,7 +19,16 @@ end teclado;
 
 architecture Behavioral of teclado is
 
-	signal fila: std_logic_vector(3 downto 0) := "1110";
+	component anti_rebote
+		port(
+			clk : in std_logic;
+			Button : in std_logic;
+			isOn : out std_logic
+		);
+	end component;
+
+	signal fila: std_logic_vector(3 downto 0) := "0001";
+	signal columna: std_logic_vector(3 downto 0) := "0000";
 	signal codigo: std_logic_vector(3 downto 0);
 	signal Siete_Seg: std_logic_vector(7 downto 0);
 
@@ -33,47 +43,52 @@ process(clk)
 	
 end process;
 
-process(fila)
+ar0 : anti_rebote
+port map(clk_ar,columnas(0),columna(0));
+ar1 : anti_rebote
+port map(clk_ar,columnas(1),columna(1));
+ar2 : anti_rebote
+port map(clk_ar,columnas(2),columna(2));
+ar3 : anti_rebote
+port map(clk_ar,columnas(3),columna(3));
+
+process(columna)
 	begin
 	
-	-- if rising_edge(clk) then
-	-- if columnas /= "1111" then
 	case fila is
-		when "1110" =>
-			case columnas is
-				when "1110" => codigo <= X"1";
-				when "1101" => codigo <= X"2";
-				when "1011" => codigo <= X"3";
-				when "0111" => codigo <= X"A";
+		when "0001" =>
+			case columna is
+				when "0001" => codigo <= X"1";
+				when "0010" => codigo <= X"2";
+				when "0100" => codigo <= X"3";
+				when "1000" => codigo <= X"A";
 				when others => codigo <= codigo;
 			end case;
-		when "1101" =>
-			case columnas is
-				when "1110" => codigo <= X"4";
-				when "1101" => codigo <= X"5";
-				when "1011" => codigo <= X"6";
-				when "0111" => codigo <= X"B";
+		when "0010" =>
+			case columna is
+				when "0001" => codigo <= X"4";
+				when "0010" => codigo <= X"5";
+				when "0100" => codigo <= X"6";
+				when "1000" => codigo <= X"B";
 				when others => codigo <= codigo;
 			end case;
-		when "1011" =>
-			case columnas is
-				when "1110" => codigo <= X"7";
-				when "1101" => codigo <= X"8";
-				when "1011" => codigo <= X"9";
-				when "0111" => codigo <= X"C";
+		when "0100" =>
+			case columna is
+				when "0001" => codigo <= X"7";
+				when "0010" => codigo <= X"8";
+				when "0100" => codigo <= X"9";
+				when "1000" => codigo <= X"C";
 				when others => codigo <= codigo;
 			end case;
 		when others =>
-			case columnas is
-				when "1110" => codigo <= X"E";
-				when "1101" => codigo <= X"0";
-				when "1011" => codigo <= X"F";
-				when "0111" => codigo <= X"D";
+			case columna is
+				when "0001" => codigo <= X"E";
+				when "0010" => codigo <= X"0";
+				when "0100" => codigo <= X"F";
+				when "1000" => codigo <= X"D";
 				when others => codigo <= codigo;
 			end case;
 	end case;
-
-	-- end if;
 
 end process;
 
