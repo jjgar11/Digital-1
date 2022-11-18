@@ -34,9 +34,9 @@ begin
 	begin
 
 		if reg = "011111" then
-			isOn <= 1;
+			isOn <= '1';
 		else
-			isOn <= 0;
+			isOn <= '0';
 		end if;
 		
 	end process;

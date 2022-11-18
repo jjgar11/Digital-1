@@ -66,9 +66,9 @@ architecture Behavioral of Proyecto is
 	component teclado
 		port( 
 			clk: in std_logic;
-			columna: in std_logic_vector(3 downto 0);
+			columnas: in std_logic_vector(3 downto 0);
 			
-			fila_Out: out std_logic_vector(3 downto 0); -- Enable 4 digit
+			filas: out std_logic_vector(3 downto 0); -- Enable 4 digit
 			Siete_Seg_Out: out std_logic_vector(7 downto 0) -- 7 Segments and Dot LEDs
 		); 
 	end component;
