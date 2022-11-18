@@ -36,139 +36,60 @@ begin
 		case fila is
 
 			when "1110" =>
-
 				case columna is
-
-					when "1110" =>
-					codigo <= "0001";
-					
-					when "1101" =>
-					codigo <= "0010";
-					
-					when "1011" =>
-					codigo <= "0011";
-					
-					when "0111" =>
-					codigo <= "1010";
-			
-					when others =>
-					codigo <= codigo;
-
+					when "1110" => codigo <= X"1";
+					when "1101" => codigo <= X"2";
+					when "1011" => codigo <= X"3";
+					when "0111" => codigo <= X"A";
+					when others => codigo <= codigo;
 				end case;
 			
 			when "1101" =>
-
 				case columna is
-
-					when "1110" =>
-					codigo <= "0100";
-					
-					when "1101" =>
-					codigo <= "0101";
-					
-					when "1011" =>
-					codigo <= "0110";
-					
-					when "0111" =>
-					codigo <= "1011";
-			
-					when others =>
-					codigo <= codigo;
-
+					when "1110" => codigo <= X"4";
+					when "1101" => codigo <= X"5";
+					when "1011" => codigo <= X"6";
+					when "0111" => codigo <= X"B";
+					when others => codigo <= codigo;
 				end case;
 			
 			when "1011" =>
-
 				case columna is
-
-					when "1110" =>
-					codigo <= "0111";
-					
-					when "1101" =>
-					codigo <= "1000";
-					
-					when "1011" =>
-					codigo <= "1001";
-					
-					when "0111" =>
-					codigo <= "1100";
-					
-					when others =>
-					codigo <= codigo;
-			
+					when "1110" => codigo <= X"7";
+					when "1101" => codigo <= X"8";
+					when "1011" => codigo <= X"9";
+					when "0111" => codigo <= X"C";
+					when others => codigo <= codigo;
 				end case;
 			
 			when others =>
-
 				case columna is
-
-					when "1110" =>
-					codigo <= "1110";
-					
-					when "1101" =>
-					codigo <= "0000";
-					
-					when "1011" =>
-					codigo <= "1111";
-					
-					when "0111" =>
-					codigo <= "1101";
-				
-					when others =>
-					codigo <= codigo;
-		
+					when "1110" => codigo <= X"E";
+					when "1101" => codigo <= X"0";
+					when "1011" => codigo <= X"F";
+					when "0111" => codigo <= X"D";
+					when others => codigo <= codigo;
 				end case;
 		end case;
 		
 		case codigo is
 
-			when "0000" =>
-			Siete_Seg <= "00000011"; --0
-			
-			when "0001" =>
-			Siete_Seg <= "10011111"; --1
-
-			when "0010" =>
-			Siete_Seg <= "00100101"; --2
-			
-			when "0011" =>
-			Siete_Seg <= "00001101"; --3
-			
-			when "0100" =>
-			Siete_Seg <= "10011001"; --4
-
-			when "0101" =>
-			Siete_Seg <= "01001001"; --5
-			
-			when "0110" =>
-			Siete_Seg <= "01000001"; --6
-			
-			when "0111" =>
-			Siete_Seg <= "00011111"; --7
-			
-			when "1000" =>
-			Siete_Seg <= "00000001"; --8
-			
-			when "1001" =>
-			Siete_Seg <= "00001001"; --9
-			
-			when "1010" =>
-			Siete_Seg <= "00010001"; --A
-			
-			when "1011" =>
-			Siete_Seg <= "11000001"; --B
-			
-			when "1100" =>
-			Siete_Seg <= "01100011"; --C
-			
-			when "1101" =>
-			Siete_Seg <= "10000101"; --D
-			
-			when "1110" =>
-			Siete_Seg <= "11111110"; --*
-			
-			when others =>
-			Siete_Seg <= "10010000"; --H
+			when X"0" => Siete_Seg <= "00000011"; --0
+			when X"1" => Siete_Seg <= "10011111"; --1
+			when X"2" => Siete_Seg <= "00100101"; --2
+			when X"3" => Siete_Seg <= "00001101"; --3
+			when X"4" => Siete_Seg <= "10011001"; --4
+			when X"5" => Siete_Seg <= "01001001"; --5
+			when X"6" => Siete_Seg <= "01000001"; --6
+			when X"7" => Siete_Seg <= "00011111"; --7
+			when X"8" => Siete_Seg <= "00000001"; --8
+			when X"9" => Siete_Seg <= "00001001"; --9
+			when X"A" => Siete_Seg <= "00010001"; --A
+			when X"B" => Siete_Seg <= "11000001"; --B
+			when X"C" => Siete_Seg <= "01100011"; --C
+			when X"D" => Siete_Seg <= "10000101"; --D
+			when X"E" => Siete_Seg <= "11111110"; --*
+			when others => Siete_Seg <= "10010000"; --H
 			
 		end case;
 	-- end if;

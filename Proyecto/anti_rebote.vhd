@@ -30,6 +30,15 @@ begin
 
 	end process;
 
-	isOn <= not reg(5) and not reg(4) and not reg(3) and reg(2) and reg(1) and reg(0);
+	process(reg)
+	begin
+
+		if reg = "011111" then
+			isOn <= 1;
+		else
+			isOn <= 0;
+		end if;
+		
+	end process;
 
 end Behavioral;
