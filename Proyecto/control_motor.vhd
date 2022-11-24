@@ -50,14 +50,14 @@ begin
 		-- end if;
 
 		-- if rising_edge(flag) then
-			if contadorCiclos < 20-1 then
+			if contadorCiclos < 2052-1 then
 				contadorCiclos <= contadorCiclos + 1;
 				nSt <= '0';
 				nDi <= '0';
 			else
 				nSt <= '1';
 				nDi <= '1';
-				if contadorPausa < 10-1 then
+				if contadorPausa < 500-1 then
 					contadorPausa <= contadorPausa + 1;
 				else
 					contadorCiclos <= 1;

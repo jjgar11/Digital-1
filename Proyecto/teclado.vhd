@@ -31,8 +31,11 @@ architecture Behavioral of teclado is
 	signal columna: std_logic_vector(3 downto 0) := "0000";
 	signal codigo: std_logic_vector(3 downto 0);
 	signal Siete_Seg: std_logic_vector(7 downto 0);
+	signal nColumnas: std_logic_vector(3 downto 0) := "0000";
 
 begin
+
+nColumnas <= columnas;
 
 process(clk)
 	begin
@@ -44,13 +47,13 @@ process(clk)
 end process;
 
 ar0 : anti_rebote
-port map(clk_ar,columnas(0),columna(0));
+port map(clk_ar,nColumnas(0),columna(0));
 ar1 : anti_rebote
-port map(clk_ar,columnas(1),columna(1));
+port map(clk_ar,nColumnas(1),columna(1));
 ar2 : anti_rebote
-port map(clk_ar,columnas(2),columna(2));
+port map(clk_ar,nColumnas(2),columna(2));
 ar3 : anti_rebote
-port map(clk_ar,columnas(3),columna(3));
+port map(clk_ar,nColumnas(3),columna(3));
 
 process(columna)
 	begin

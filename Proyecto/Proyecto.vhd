@@ -7,7 +7,7 @@ use ieee.numeric_std.all;
 entity Proyecto is
 
 	port(
-		-- clk : in std_logic;
+		clk : in std_logic;
 		-- St : in std_logic;
 		columna: in std_logic_vector(3 downto 0);
 		fila: out std_logic_vector(3 downto 0);
@@ -23,13 +23,15 @@ end Proyecto;
 architecture Behavioral of Proyecto is
 
 	-- Se simula el clock de la FPGA
-	constant ClockFrequency : integer := 50e6; -- 50 MHz
-	constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
-	signal clk : std_logic := '1';
+	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
+	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	-- signal clk : std_logic := '1';
 
 	signal nclk, clk_rebote, clk_ar, clk_tc : std_logic := '1';
 	signal St, Di : std_logic := '0';
 	signal B : std_logic_vector(0 to 3) := "0001";
+	signal boton : std_logic_vector(3 downto 0) := "0000";
+	signal ind : std_logic := '0';
 
 	component div_frec
 		port(
@@ -74,17 +76,28 @@ architecture Behavioral of Proyecto is
 		); 
 	end component;
 
+	component tecladoDos
+		PORT(
+			CLK 		  : IN  STD_LOGIC; 						  --RELOJ FPGA
+			COLUMNAS   : IN  STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO CONECTADO A LAS COLUMNAS DEL TECLADO
+			FILAS 	  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO CONECTADO A LA FILAS DEL TECLADO
+			BOTON_PRES : OUT STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO QUE INDICA LA TECLA QUE SE PRESION�
+			IND		  : OUT STD_LOGIC;							  --BANDERA QUE INDICA CUANDO SE PRESION� UNA TECLA (S�LO DURA UN CICLO DE RELOJ)
+			SIETE_SEG : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+		);
+	end component;
+
 begin
 
-	clk <= not clk after ClockPeriod / 2;
+	--clk <= not clk after ClockPeriod / 2;
 	div1 : div_frec
 	port map(clk,100e3,nclk);
 
 	div2 : div_frec
-	port map(clk,1e2,clk_ar);
+	port map(clk,25e3,clk_ar);
 
 	div3 : div_frec
-	port map(clk,1e3,clk_tc);
+	port map(clk,500e3,clk_tc);
 
 	control : control_motor
 	port map(nclk,St,Di,B,St,Di);
@@ -92,8 +105,11 @@ begin
 	motor : PAP_motor
 	port map(nclk,St,Di,B,B);
 
-	tecladito : teclado
-	port map(clk_tc,clk_ar,columna,fila,disp7seg);
+	-- tecladito : teclado
+	-- port map(clk_tc,clk_ar,columna,fila,disp7seg);
+
+	tecladitodos :tecladoDos
+	port map(clk,columna,fila,boton,ind,disp7seg);
 
 	BO <= B;
 
