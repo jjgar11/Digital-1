@@ -8,12 +8,13 @@ entity Proyecto is
 
 	port(
 		clk : in std_logic;
-		-- St : in std_logic;
 		columna: in std_logic_vector(3 downto 0);
 		config: in std_logic := '0';
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
-		dispOn : out std_logic_vector(3 downto 0) := "1110";
+		--dispOn : out std_logic_vector(3 downto 0) := "1110";
+		--VecTiempos : out std_logic_vector(15 downto 0);
+		digit : out std_logic_vector(3 downto 0);
 		disp7seg : out std_logic_vector(7 downto 0)
 	);
 
@@ -34,6 +35,8 @@ architecture Behavioral of Proyecto is
 	signal boton : std_logic_vector(3 downto 0) := "0000";
 	signal ind : std_logic := '0';
 	signal reg_config : std_logic_vector(15 downto 0) := (others => '0');
+	signal VecTiempos : std_logic_vector(15 downto 0);
+	signal vec_aux : std_logic_vector(7 downto 0);
 
 	component div_frec
 		port(
@@ -95,11 +98,22 @@ architecture Behavioral of Proyecto is
 			config : in std_logic;
 			TeclaOprimida : in std_logic_vector(3 downto 0);
 			ind : in std_logic := '0';
+			-- VecTiempos : out std_logic_vector(15 downto 0) := (others => '0');
 			reg_config_In : in std_logic_vector(15 downto 0);
 			reg_config_Out : out std_logic_vector(15 downto 0)
 		);
 	end component;
 
+	component DispSeg
+		port( 
+			clk: in std_logic;
+			VecTiempos: in std_logic_vector(15 downto 0); -- Slide Switch
+			
+			digit: out std_logic_vector(3 downto 0); -- Enable 4 digit
+			Siete_Seg: out std_logic_vector(7 downto 0) -- 7 Segments and Dot LEDs
+		);
+	end component;
+	
 begin
 
 	--clk <= not clk after ClockPeriod / 2;
@@ -122,10 +136,16 @@ begin
 	-- port map(clk_tc,clk_ar,columna,fila,disp7seg);
 
 	tecladitodos :tecladoDos
-	port map(clk,columna,fila,boton,ind,disp7seg);
+	port map(clk,columna,fila,boton,ind,vec_aux);
 
 	config_comp :control_config
 	port map(clk,config,boton,ind,reg_config,reg_config);
+
+	-- controlito : control_config
+	-- port map(clk,config,boton,ind,VecTiempos);
+	
+	prueba : DispSeg
+	port map(clk,reg_config,digit,disp7seg);
 
 	BO <= B;
 

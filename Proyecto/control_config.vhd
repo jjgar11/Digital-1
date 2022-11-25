@@ -11,6 +11,7 @@ entity control_config is
 		config : in std_logic;
 		TeclaOprimida : in std_logic_vector(3 downto 0);
 		ind : in std_logic := '0';
+		-- VecTiempos : out std_logic_vector(15 downto 0) := (others => '0');
 		reg_config_In : in std_logic_vector(15 downto 0);
 		reg_config_Out : out std_logic_vector(15 downto 0)
 	);
@@ -27,6 +28,7 @@ architecture Behavioral of control_config is
 	signal reg_config : std_logic_vector(15 downto 0);
 	signal Tecla : std_logic_vector(3 downto 0);
 	signal TiempoBin : std_logic_vector(3 downto 0);
+	--signal VecTiempos : std_logic_vector(15 downto 0) := (others => '0');
 	signal temp : std_logic_vector(7 downto 0);
 
 begin
@@ -56,6 +58,8 @@ begin
 				ef <= init;
 			elsif TeclaOprimida = x"F" and ind = '1' then
 				ef <= tiempo;
+			else
+				ef <= esperaContenedor;
 			end if;
 
 		when tiempo =>
@@ -94,10 +98,20 @@ begin
 			elsif Tecla = x"D" then
 				reg_config <= reg_config_In(15 downto 4) & TiempoBin;
 			end if;
+			-- if Tecla = X"A" then
+			-- 	VecTiempos(15  downto 12) <= TiempoBin;
+			-- elsif Tecla = X"B" then
+			-- 	VecTiempos(11  downto 8) <= TiempoBin;
+			-- elsif Tecla = X"C" then
+			-- 	VecTiempos(7  downto 4) <= TiempoBin;
+			-- elsif Tecla = X"D" then
+			-- 	VecTiempos(3  downto 0) <= TiempoBin;
+			-- end if;
 			ef <= pausa;
 				
 
 	end case;
+
 	end process;
 
 	process(clk)
