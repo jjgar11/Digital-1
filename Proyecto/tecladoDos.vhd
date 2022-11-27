@@ -6,190 +6,183 @@ use ieee.numeric_std.all;
 
 entity tecladoDos is
 
-
---El generic es �til cuando teclado2 es parte de un TOP. Si no es parte de un TOP
---entonces se deben poner la frecuencia del FPGA como valores contantes en el generic
--- GENERIC(
--- 			FREQ_CLK : INTEGER := 50_000_000         --FRECUENCIA DE LA TARJETA
--- );
-
-
-PORT(
-	CLK 		  : IN  STD_LOGIC; 						  --RELOJ FPGA
-	COLUMNAS   : IN  STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO CONECTADO A LAS COLUMNAS DEL TECLADO
-	FILAS 	  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO CONECTADO A LA FILAS DEL TECLADO
-	BOTON_PRES : OUT STD_LOGIC_VECTOR(3 DOWNTO 0); --PUERTO QUE INDICA LA TECLA QUE SE PRESION�
-	IND		  : OUT STD_LOGIC;							  --BANDERA QUE INDICA CUANDO SE PRESION� UNA TECLA (S�LO DURA UN CICLO DE RELOJ)
-	SIETE_SEG : OUT STD_LOGIC_VECTOR(7 DOWNTO 0) := "11111111"
+port(
+	clk 		  : in  std_logic; 						  --reloj fpga
+	columnas   : in  std_logic_vector(3 downto 0); --puerto conectado a las columnas del teclado
+	filas 	  : out std_logic_vector(3 downto 0); --puerto conectado a la filas del teclado
+	boton_pres : out std_logic_vector(3 downto 0); --puerto que indica la tecla que se presion�
+	ind		  : out std_logic;							  --bandera que indica cuando se presion� una tecla (s�lo dura un ciclo de reloj)
+	siete_seg : out std_logic_vector(7 downto 0) := "11111111"
 );
 
 end tecladoDos;
 
+
 architecture Behavioral of tecladoDos is
 
-CONSTANT DELAY_1MS  : INTEGER := (50e6/1000)-1;
-CONSTANT DELAY_10MS : INTEGER := (50e6/100)-1;
+constant delay_1ms  : integer := (50e6/1000)-1;
+constant delay_10ms : integer := (50e6/100)-1;
 
-SIGNAL CONTA_1MS 	: INTEGER RANGE 0 TO DELAY_1MS := 0;
-SIGNAL BANDERA 	: STD_LOGIC := '0';
-SIGNAL CONTA_10MS : INTEGER RANGE 0 TO DELAY_10MS := 0;
-SIGNAL BANDERA2 	: STD_LOGIC := '0';
+signal conta_1ms 	: integer range 0 to delay_1ms := 0;
+signal bandera 	: std_logic := '0';
+signal conta_10ms : integer range 0 to delay_10ms := 0;
+signal bandera2 	: std_logic := '0';
 
-SIGNAL REG_B1  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B2  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B3  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B4  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B5  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B6  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B7  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B8  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B9  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BA  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BB  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BC  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BD  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_B0  : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BAS : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL REG_BGA : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS=>'0');
+signal reg_b1  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b2  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b3  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b4  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b5  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b6  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b7  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b8  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b9  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_ba  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_bb  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_bc  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_bd  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_b0  : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_bas : std_logic_vector(7 downto 0) := (others=>'0');
+signal reg_bga : std_logic_vector(7 downto 0) := (others=>'0');
 
-SIGNAL FILA_REG_S : STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS=>'0');
-SIGNAL FILA : INTEGER RANGE 0 TO 3 := 0;
+signal fila_reg_s : std_logic_vector(3 downto 0) := (others=>'0');
+signal fila : integer range 0 to 3 := 0;
 
-SIGNAL IND_S : STD_LOGIC := '0';
-SIGNAL EDO : INTEGER RANGE 0 TO 1 := 0;
+signal ind_s : std_logic := '0';
+signal edo : integer range 0 to 1 := 0;
 
 begin
 
-FILAS <= FILA_REG_S;
+filas <= fila_reg_s;
 
---RETARDO 1 MS--
-PROCESS(CLK)
-	BEGIN
-	IF RISING_EDGE(CLK) THEN
-		IF CONTA_1MS = DELAY_1MS-1 THEN
-			CONTA_1MS <= 0;
-			BANDERA <= '1';
+--retardo 1 ms--
+process(clk)
+	begin
+	if rising_edge(clk) then
+		if conta_1ms = delay_1ms-1 then
+			conta_1ms <= 0;
+			bandera <= '1';
 		else
-			CONTA_1MS <= CONTA_1MS+1;
-			BANDERA <= '0';
-		END IF;
-	END IF;
-END PROCESS;
+			conta_1ms <= conta_1ms+1;
+			bandera <= '0';
+		end if;
+	end if;
+end process;
 ----------------
 
---RETARDO 10 MS--
-PROCESS(CLK)
-	BEGIN
-	IF RISING_EDGE(CLK) THEN
-		IF CONTA_10MS = DELAY_10MS-1 THEN
-		CONTA_10MS <= 0;
-		BANDERA2 <= '1';
+--retardo 10 ms--
+process(clk)
+	begin
+	if rising_edge(clk) then
+		if conta_10ms = delay_10ms-1 then
+		conta_10ms <= 0;
+		bandera2 <= '1';
 		else
-			CONTA_10MS <= CONTA_10MS+1;
-			BANDERA2 <= '0';
-		END IF;
-	END IF;
-END PROCESS;
+			conta_10ms <= conta_10ms+1;
+			bandera2 <= '0';
+		end if;
+	end if;
+end process;
 ----------------
 
---PROCESO QUE ACTIVA CADA FILA CADA 10ms--
-PROCESS(CLK, BANDERA2)
-	BEGIN
-		IF RISING_EDGE(CLK) AND BANDERA2 = '1' THEN
-			IF FILA = 3 THEN
-				FILA <= 0;
+--proceso que activa cada fila cada 10ms--
+process(clk, bandera2)
+	begin
+		if rising_edge(clk) and bandera2 = '1' then
+			if fila = 3 then
+				fila <= 0;
 			else
-				FILA <= FILA+1;
-			END IF;
-		END IF;
-END PROCESS;
+				fila <= fila+1;
+			end if;
+		end if;
+end process;
 
-WITH FILA SELECT
-	FILA_REG_S <= "1000" WHEN 0,
-					  "0100" WHEN 1,
-					  "0010" WHEN 2,
-					  "0001" WHEN OTHERS;
+with fila select
+	fila_reg_s <= "1000" when 0,
+					  "0100" when 1,
+					  "0010" when 2,
+					  "0001" when others;
 -------------------------------				
 
-----------PROCESO QUE EVITA EL EFECTO REBOTE DE LAS TECLAS----------------
---LLENA LOS REGISTROS CON '1' DEPENDIENDO EL BOT�N QUE SE HAYA PRESIONADO--
-PROCESS(CLK,BANDERA)
-BEGIN
-	IF RISING_EDGE(CLK) AND BANDERA = '1' THEN
-		IF FILA_REG_S = "1000" THEN --PRIMERA FILA DE BOTONES
-			REG_B1 <= REG_B1(6 DOWNTO 0)&COLUMNAS(3);
-			REG_B2 <= REG_B2(6 DOWNTO 0)&COLUMNAS(2);
-			REG_B3 <= REG_B3(6 DOWNTO 0)&COLUMNAS(1);
-			REG_BA <= REG_BA(6 DOWNTO 0)&COLUMNAS(0);
-		ELSIF FILA_REG_S = "0100" THEN --SEGUNDA FILA DE BOTONES
-			REG_B4 <= REG_B4(6 DOWNTO 0)&COLUMNAS(3);
-			REG_B5 <= REG_B5(6 DOWNTO 0)&COLUMNAS(2);
-			REG_B6 <= REG_B6(6 DOWNTO 0)&COLUMNAS(1);
-			REG_BB <= REG_BB(6 DOWNTO 0)&COLUMNAS(0);
-		ELSIF FILA_REG_S = "0010" THEN --TERCERA FILA DE BOTONES
-			REG_B7 <= REG_B7(6 DOWNTO 0)&COLUMNAS(3);
-			REG_B8 <= REG_B8(6 DOWNTO 0)&COLUMNAS(2);
-			REG_B9 <= REG_B9(6 DOWNTO 0)&COLUMNAS(1);
-			REG_BC <= REG_BC(6 DOWNTO 0)&COLUMNAS(0);
-		ELSIF FILA_REG_S = "0001" THEN --CUARTA FILA DE BOTONES
-			REG_BAS <= REG_BAS(6 DOWNTO 0)&COLUMNAS(3);
-			REG_B0  <= REG_B0(6 DOWNTO 0)&COLUMNAS(2);
-			REG_BGA <= REG_BGA(6 DOWNTO 0)&COLUMNAS(1);
-			REG_BD  <= REG_BD(6 DOWNTO 0)&COLUMNAS(0);
-		END IF;
-	END IF;
-END PROCESS;
+----------proceso que evita el efecto rebote de las teclas----------------
+--llena los registros con '1' dependiendo el bot�n que se haya presionado--
+process(clk,bandera)
+begin
+	if rising_edge(clk) and bandera = '1' then
+		if fila_reg_s = "1000" then --primera fila de botones
+			reg_b1 <= reg_b1(6 downto 0)&columnas(3);
+			reg_b2 <= reg_b2(6 downto 0)&columnas(2);
+			reg_b3 <= reg_b3(6 downto 0)&columnas(1);
+			reg_ba <= reg_ba(6 downto 0)&columnas(0);
+		elsif fila_reg_s = "0100" then --segunda fila de botones
+			reg_b4 <= reg_b4(6 downto 0)&columnas(3);
+			reg_b5 <= reg_b5(6 downto 0)&columnas(2);
+			reg_b6 <= reg_b6(6 downto 0)&columnas(1);
+			reg_bb <= reg_bb(6 downto 0)&columnas(0);
+		elsif fila_reg_s = "0010" then --tercera fila de botones
+			reg_b7 <= reg_b7(6 downto 0)&columnas(3);
+			reg_b8 <= reg_b8(6 downto 0)&columnas(2);
+			reg_b9 <= reg_b9(6 downto 0)&columnas(1);
+			reg_bc <= reg_bc(6 downto 0)&columnas(0);
+		elsif fila_reg_s = "0001" then --cuarta fila de botones
+			reg_bas <= reg_bas(6 downto 0)&columnas(3);
+			reg_b0  <= reg_b0(6 downto 0)&columnas(2);
+			reg_bga <= reg_bga(6 downto 0)&columnas(1);
+			reg_bd  <= reg_bd(6 downto 0)&columnas(0);
+		end if;
+	end if;
+end process;
 ----------------------------------------------------------------------------
 
---MANDA EL DATO A LA SALIDA--
-PROCESS(CLK)
-BEGIN
-	IF RISING_EDGE(CLK) THEN
-		IF 	REG_B0  	= "11111111" THEN BOTON_PRES <= X"0"; IND_S <= '1'; SIETE_SEG <= "00000011"; --0
-		ELSIF REG_B1 	= "11111111" THEN BOTON_PRES <= X"1"; IND_S <= '1'; SIETE_SEG <= "10011111"; --1
-		ELSIF	REG_B2 	= "11111111" THEN BOTON_PRES <= X"2"; IND_S <= '1'; SIETE_SEG <= "00100101"; --2
-		ELSIF	REG_B3 	= "11111111" THEN BOTON_PRES <= X"3"; IND_S <= '1'; SIETE_SEG <= "00001101"; --3
-		ELSIF	REG_B4 	= "11111111" THEN BOTON_PRES <= X"4"; IND_S <= '1'; SIETE_SEG <= "10011001"; --4
-		ELSIF	REG_B5 	= "11111111" THEN BOTON_PRES <= X"5"; IND_S <= '1'; SIETE_SEG <= "01001001"; --5
-		ELSIF	REG_B6 	= "11111111" THEN BOTON_PRES <= X"6"; IND_S <= '1'; SIETE_SEG <= "01000001"; --6
-		ELSIF	REG_B7 	= "11111111" THEN BOTON_PRES <= X"7"; IND_S <= '1'; SIETE_SEG <= "00011111"; --7
-		ELSIF	REG_B8 	= "11111111" THEN BOTON_PRES <= X"8"; IND_S <= '1'; SIETE_SEG <= "00000001"; --8
-		ELSIF	REG_B9 	= "11111111" THEN BOTON_PRES <= X"9"; IND_S <= '1'; SIETE_SEG <= "00001001"; --9
-		ELSIF	REG_BA 	= "11111111" THEN BOTON_PRES <= X"A"; IND_S <= '1'; SIETE_SEG <= "00010001"; --A
-		ELSIF	REG_BB 	= "11111111" THEN BOTON_PRES <= X"B"; IND_S <= '1'; SIETE_SEG <= "11000001"; --B
-		ELSIF	REG_BC 	= "11111111" THEN BOTON_PRES <= X"C"; IND_S <= '1'; SIETE_SEG <= "01100011"; --C
-		ELSIF	REG_BD  	= "11111111" THEN BOTON_PRES <= X"D"; IND_S <= '1'; SIETE_SEG <= "10000101"; --D
-		ELSIF	REG_BAS 	= "11111111" THEN BOTON_PRES <= X"E"; IND_S <= '1'; SIETE_SEG <= "11111110"; --*
-		ELSIF	REG_BGA 	= "11111111" THEN BOTON_PRES <= X"F"; IND_S <= '1'; SIETE_SEG <= "10010000"; --H
-		ELSE IND_S <= '0';
-		END IF;
-	END IF;
-END PROCESS;
+--manda el dato a la salida--
+process(clk)
+begin
+	if rising_edge(clk) then
+		if 	reg_b0  	= "11111111" then boton_pres <= x"0"; ind_s <= '1'; siete_seg <= "00000011"; --0
+		elsif reg_b1 	= "11111111" then boton_pres <= x"1"; ind_s <= '1'; siete_seg <= "10011111"; --1
+		elsif reg_b2 	= "11111111" then boton_pres <= x"2"; ind_s <= '1'; siete_seg <= "00100101"; --2
+		elsif reg_b3 	= "11111111" then boton_pres <= x"3"; ind_s <= '1'; siete_seg <= "00001101"; --3
+		elsif reg_b4 	= "11111111" then boton_pres <= x"4"; ind_s <= '1'; siete_seg <= "10011001"; --4
+		elsif reg_b5 	= "11111111" then boton_pres <= x"5"; ind_s <= '1'; siete_seg <= "01001001"; --5
+		elsif reg_b6 	= "11111111" then boton_pres <= x"6"; ind_s <= '1'; siete_seg <= "01000001"; --6
+		elsif reg_b7 	= "11111111" then boton_pres <= x"7"; ind_s <= '1'; siete_seg <= "00011111"; --7
+		elsif reg_b8 	= "11111111" then boton_pres <= x"8"; ind_s <= '1'; siete_seg <= "00000001"; --8
+		elsif reg_b9 	= "11111111" then boton_pres <= x"9"; ind_s <= '1'; siete_seg <= "00001001"; --9
+		elsif reg_ba 	= "11111111" then boton_pres <= x"a"; ind_s <= '1'; siete_seg <= "00010001"; --a
+		elsif reg_bb 	= "11111111" then boton_pres <= x"b"; ind_s <= '1'; siete_seg <= "11000001"; --b
+		elsif reg_bc 	= "11111111" then boton_pres <= x"c"; ind_s <= '1'; siete_seg <= "01100011"; --c
+		elsif reg_bd 	= "11111111" then boton_pres <= x"d"; ind_s <= '1'; siete_seg <= "10000101"; --d
+		elsif reg_bas 	= "11111111" then boton_pres <= x"e"; ind_s <= '1'; siete_seg <= "11111110"; --*
+		elsif reg_bga 	= "11111111" then boton_pres <= x"f"; ind_s <= '1'; siete_seg <= "10010000"; --h
+		else ind_s <= '0';
+		end if;
+	end if;
+end process;
 
 -----------------------------
 
---M�QUINA DE ESTADOS PARA LA BANDERA--
-PROCESS(CLK)
-BEGIN
-	IF RISING_EDGE(CLK) THEN
-		IF EDO = 0 THEN
-			IF IND_S = '1' THEN
-				IND <= '1';
-				EDO <= 1;
-			ELSE
-				EDO <= 0;
-				IND <= '0';
-			END IF;
-		ELSE
-			IF IND_S = '1' THEN
-				EDO <= 1;
-				IND <= '0';
-			ELSE
-				EDO <= 0;
-			END IF;
-		END IF;
-	END IF;
-END PROCESS;
+--m�quina de estados para la bandera--
+process(clk)
+begin
+	if rising_edge(clk) then
+		if edo = 0 then
+			if ind_s = '1' then
+				ind <= '1';
+				edo <= 1;
+			else
+				edo <= 0;
+				ind <= '0';
+			end if;
+		else
+			if ind_s = '1' then
+				edo <= 1;
+				ind <= '0';
+			else
+				edo <= 0;
+			end if;
+		end if;
+	end if;
+end process;
 --------------------------------------
 
 

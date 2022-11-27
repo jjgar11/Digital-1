@@ -22,8 +22,8 @@ end control_config;
 architecture Behavioral of control_config is
 
 	type estados is (init, esperaContenedor, tiempo, esperaTiempo0, esperaTiempo1, guardar, pausa);
-	SIGNAL ep : estados := pausa; 	--Estado Presente
-	SIGNAL ef : estados; 		--Estado Siguiente
+	signal ep : estados := pausa; 	--Estado Presente
+	signal ef : estados; 		--Estado Siguiente
 
 	signal reg_config : std_logic_vector(15 downto 0);
 	signal Tecla : std_logic_vector(3 downto 0);
