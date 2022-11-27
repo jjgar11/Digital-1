@@ -29,7 +29,6 @@ architecture Behavioral of control_config is
 	signal Tecla : std_logic_vector(3 downto 0);
 	signal TiempoBin : std_logic_vector(3 downto 0);
 	--signal VecTiempos : std_logic_vector(15 downto 0) := (others => '0');
-	signal temp : std_logic_vector(7 downto 0);
 
 begin
 
@@ -74,11 +73,13 @@ begin
 			if TeclaOprimida = x"F" and ind = '1' then
 				ef <= guardar;
 			elsif TiempoBin <= x"1" and TeclaOprimida>=x"0" and TeclaOprimida<=x"5" and ind = '1' then
-				temp <= TiempoBin * "1010";
-				TiempoBin <= temp(3 downto 0) + TeclaOprimida;
+				-- temp <= TiempoBin * "1010";
+				TiempoBin <= "1010" + TeclaOprimida;
 				ef <= esperaTiempo0;
 			elsif TeclaOprimida = x"E" and ind = '1' then
 				ef <= tiempo;
+			else
+				ef <= esperaTiempo1;
 			end if;
 
 		when esperaTiempo0 =>
@@ -86,6 +87,8 @@ begin
 				ef <= tiempo;
 			elsif TeclaOprimida = x"F" and ind = '1' then
 				ef <= guardar;
+			else
+				ef <= esperaTiempo0;
 			end if;
 
 		when guardar =>
