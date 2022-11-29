@@ -18,7 +18,6 @@ entity Proyecto is
 		disp7seg : out std_logic_vector(7 downto 0)
 	);
 
-
 end Proyecto;
 
 
@@ -29,7 +28,7 @@ architecture Behavioral of Proyecto is
 	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
 	-- signal clk : std_logic := '1';
 
-	signal nclk, clk_rebote, clk_ar, clk_tc : std_logic := '1';
+	signal clk_motor, clk_rebote, clk_ar, clk_min, clk_tc : std_logic := '1';
 	signal St, Di : std_logic := '0';
 	signal B : std_logic_vector(0 to 3) := "0001";
 	signal boton : std_logic_vector(3 downto 0) := "0000";
@@ -52,9 +51,11 @@ architecture Behavioral of Proyecto is
 	component control_motor
 		port(
 			clk : in std_logic;
+			clk_motor : in std_logic;
+			clk_min : in std_logic;
+			reg_config : in std_logic_vector(15 downto 0);
 			StIn : in std_logic;
 			DiIn : in std_logic;
-			B : in std_logic_vector(0 to 3);
 			StOut : out std_logic;
 			DiOut : out std_logic
 		);
@@ -116,9 +117,9 @@ architecture Behavioral of Proyecto is
 	
 begin
 
-	--clk <= not clk after ClockPeriod / 2;
+	-- clk <= not clk after ClockPeriod / 2;
 	div1 : div_frec
-	port map(clk,100e3,nclk);
+	port map(clk,100e3,clk_motor);
 
 	div2 : div_frec
 	port map(clk,25e3,clk_ar);
@@ -126,14 +127,17 @@ begin
 	div3 : div_frec
 	port map(clk,500e3,clk_tc);
 
+	div4 : div_frec
+	port map(clk,1500e6,clk_min);
+
 	control : control_motor
-	port map(nclk,St,Di,B,St,Di);
+	port map(clk,clk_motor,clk_min,reg_config,St,Di,St,Di);
 
 	motor : PAP_motor
-	port map(nclk,St,Di,B,B);
+	port map(clk_motor,St,Di,B,B);
 
 	-- tecladito : teclado
-	-- port map(clk_tc,clk_ar,columna,fila,disp7seg);
+	-- port map(clk_tc,clk_min,columna,fila,disp7seg);
 
 	tecladitodos :tecladoDos
 	port map(clk,columna,fila,boton,ind,vec_aux);

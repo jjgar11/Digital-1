@@ -20,7 +20,7 @@ end div_frec;
 
 architecture Behavioral of div_frec is
 
-	signal cuenta: integer range 1 to 25000000 := 1;
+	signal cuenta: integer range 1 to 1500e6 := 1;
 	signal salida: std_logic := '1';
 	
 begin
