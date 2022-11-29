@@ -9,8 +9,9 @@ entity DispSeg is
 	port( 
 		clk: in std_logic;
 		VecTiempos: in std_logic_vector(15 downto 0); -- Slide Switch
+		btn : in std_logic_vector(3 downto 0);
 		
-		digit: out std_logic_vector(3 downto 0); -- Enable 4 digit
+		digit: out std_logic_vector(4 downto 0); -- Enable 4 digit
 		Siete_Seg: out std_logic_vector(7 downto 0) -- 7 Segments and Dot LEDs
 		); 
 
@@ -18,7 +19,7 @@ end DispSeg;
 
 architecture Behavioral of DispSeg is
 
-signal digitin: std_logic_vector(3 downto 0) := "1110";
+signal digitin: std_logic_vector(4 downto 0) := "11110";
 signal codigo: std_logic_vector(3 downto 0);
 --signal codigo0,codigo1,codigo2,codigo3: std_logic_vector(3 downto 0);
 
@@ -28,21 +29,24 @@ process(clk)
 begin
 
 	if rising_edge(clk) then
-		digitin <= digitin(2 downto 0) & digitin(3);
+		digitin <= digitin(3 downto 0) & digitin(4);
 		
 		case digitin is
 			
-			when "1110" =>
+			when "11110" =>
 			codigo <= VecTiempos(15  downto 12);
 			
-			when "1101" =>
+			when "11101" =>
 			codigo <= VecTiempos(11  downto 8);
 			
-			when "1011" =>
+			when "11011" =>
 			codigo <= VecTiempos(7  downto 4);
 			
-			when "0111" =>
+			when "10111" =>
 			codigo <= VecTiempos(3  downto 0);
+			
+			when "01111" =>
+			codigo <= btn;
 			
 			when others => codigo <= "1111"; --null
 		

@@ -14,7 +14,8 @@ entity Proyecto is
 		BO : out std_logic_vector(3 downto 0);
 		--dispOn : out std_logic_vector(3 downto 0) := "1110";
 		--VecTiempos : out std_logic_vector(15 downto 0);
-		digit : out std_logic_vector(3 downto 0);
+		digit : out std_logic_vector(4 downto 0);
+		reg_config_bits : out std_logic_vector(3 downto 0);
 		disp7seg : out std_logic_vector(7 downto 0)
 	);
 
@@ -34,7 +35,6 @@ architecture Behavioral of Proyecto is
 	signal boton : std_logic_vector(3 downto 0) := "0000";
 	signal ind : std_logic := '0';
 	signal reg_config : std_logic_vector(15 downto 0) := (others => '0');
-	signal VecTiempos : std_logic_vector(15 downto 0);
 	signal vec_aux : std_logic_vector(7 downto 0);
 
 	component div_frec
@@ -109,8 +109,9 @@ architecture Behavioral of Proyecto is
 		port( 
 			clk: in std_logic;
 			VecTiempos: in std_logic_vector(15 downto 0); -- Slide Switch
+			btn : in std_logic_vector(3 downto 0);
 			
-			digit: out std_logic_vector(3 downto 0); -- Enable 4 digit
+			digit: out std_logic_vector(4 downto 0); -- Enable 4 digit
 			Siete_Seg: out std_logic_vector(7 downto 0) -- 7 Segments and Dot LEDs
 		);
 	end component;
@@ -136,9 +137,6 @@ begin
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);
 
-	-- tecladito : teclado
-	-- port map(clk_tc,clk_min,columna,fila,disp7seg);
-
 	tecladitodos :tecladoDos
 	port map(clk,columna,fila,boton,ind,vec_aux);
 
@@ -149,8 +147,9 @@ begin
 	-- port map(clk,config,boton,ind,VecTiempos);
 	
 	prueba : DispSeg
-	port map(clk,reg_config,digit,disp7seg);
+	port map(clk_ar,reg_config,boton,digit,disp7seg);
 
 	BO <= B;
+	reg_config_bits <= not reg_config(15 downto 12);
 
 end Behavioral;
