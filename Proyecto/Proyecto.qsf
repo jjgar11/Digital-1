@@ -74,6 +74,7 @@ set_location_assignment PIN_34 -to fila[2]
 set_location_assignment PIN_39 -to fila[3]
 set_location_assignment PIN_32 -to fila[1]
 set_location_assignment PIN_30 -to fila[0]
+set_location_assignment PIN_86 -to okButton
 set_location_assignment PIN_115 -to disp7seg[0]
 set_location_assignment PIN_127 -to disp7seg[7]
 set_location_assignment PIN_126 -to disp7seg[6]
@@ -95,8 +96,6 @@ set_location_assignment PIN_72 -to reg_config_bits[3]
 set_location_assignment PIN_69 -to reg_config_bits[2]
 set_location_assignment PIN_70 -to reg_config_bits[1]
 set_location_assignment PIN_71 -to reg_config_bits[0]
-set_location_assignment PIN_67 -to Di_in
-set_location_assignment PIN_68 -to St_in
 set_location_assignment PIN_54 -to BO[0]
 set_location_assignment PIN_52 -to BO[1]
 set_location_assignment PIN_53 -to BO[2]

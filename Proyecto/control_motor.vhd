@@ -10,6 +10,7 @@ entity control_motor is
 		clk : in std_logic;
 		clk_motor : in std_logic;
 		clk_min : in std_logic;
+		okButton : in std_logic:= '0';
 		reg_config : in std_logic_vector(15 downto 0);
 		StIn : in std_logic;
 		DiIn : in std_logic;
@@ -22,22 +23,22 @@ end control_motor;
 
 architecture Behavioral of control_motor is
 
-	type estados is (init, toContainer, toInit, espera);
+	type estados is (init, espera, toContainer, onContainer);
 	signal ep : estados := init;
 	signal ef : estados;
 
-	signal contadorCiclos : integer := 0;
-	signal contadorPausa : integer := 0;
-	signal ciclos, pausa : integer := 0;
-	-- signal flag : std_logic;
-	signal conteo : std_logic_vector(3 downto 0) := "0000";
-	signal contenedorActual : std_logic_vector(1 downto 0) := "00";
-	signal nSt : std_logic := '0';
-	signal nDi : std_logic := '0';
-
-	signal arrive, dispensed, go : std_logic := '0';
+	signal contadorCiclos, ciclos : integer := 0;
+	signal conteo, dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
+	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
+	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
+	signal St, Di, arrive, buzzer : std_logic := '0';
+	-- signal edo, flag_arrive : std_logic := '0';
 
 begin
+	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
+	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
+	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
+	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 50;
 
 	process(ep,clk)
 	begin
@@ -45,58 +46,52 @@ begin
 	case ep is
 
 		when init =>
-			if conteo(3) = '1' then
-				nSt <= '0';
-				nDi <= '0';
-				ciclos <= 256;
-				ef <= toContainer;
-			elsif conteo(2) = '1' then
-				nSt <= '0';
-				nDi <= '0';
-				ciclos <= 768;
-				ef <= toContainer;
-			elsif conteo(1) = '1' then
-				nSt <= '0';
-				nDi <= '1';
-				ciclos <= 768;
-				ef <= toContainer;
-			elsif conteo(0) = '1' then
-				nSt <= '0';
-				nDi <= '1';
-				ciclos <= 256;
-				ef <= toContainer;
-			else
-				nSt <= '1';
-				ciclos <= 0;
+			if temp = tempAnt then
 				ef <= init;
+			else 
+				conteo <= temp;
+				ef <= espera;
 			end if;
+
+		when espera =>
+			buzzer <= '0';
 			
+			if conteo = "0000" then
+				St <= '1';
+				ef <= espera;
+			else
+				contSig(1) <= not conteo(3) and not conteo(2);
+				contSig(0) <= not conteo(3) and (conteo(2) or not conteo(1));
+				St <= '0';
+				ef <= toContainer;
+			end if;
+
 		when toContainer =>
 			if arrive = '1' then
-				nSt <= '1';
-				pausa <= 15;
-				ef <= espera;
-			else
+				buzzer <= '1';
+				St <= '1';
+				contAct <= contSig;
+				ef <= onContainer;
+			else 
+				buzzer <= '0';
+				St <= '0';
 				ef <= toContainer;
 			end if;
-			
-		when espera =>
-			if dispensed = '1' then
-				pausa <= 0;
-				nSt <= '0';
-				nDi <= not nDi;
-				ef <= toInit;
-			else
-				ef <= espera;
-			end if ;
 
-		when toInit =>
-			if arrive = '1' then
-				nSt <= '1';
-				pausa <= 15;
-				ef <= init;
-			else
-				ef <= toInit;
+		when onContainer =>
+			if okButton = '1' then
+				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
+				conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
+				buzzer <= '0';
+				if conteo = "0000" then
+					ef <= init;
+				else 
+					tempAnt <= temp;
+					ef <= espera;
+				end if;
+			else 
+				buzzer <= '1';
+				ef <= onContainer;
 			end if;
 
 	end case;
@@ -107,7 +102,7 @@ begin
 	begin
 
 	if rising_edge(clk_motor) then
-		if nSt = '0' then
+		if St = '0' then
 			if contadorCiclos < ciclos then
 				contadorCiclos <= contadorCiclos + 1;
 				arrive <= '0';
@@ -115,17 +110,10 @@ begin
 				contadorCiclos <= 0;
 				arrive <= '1';
 			end if;
-		end if ;
-		if nSt = '1' and ep = espera then
-			if contadorPausa < pausa then
-				contadorPausa <= contadorPausa + 1;
-				dispensed <= '0';
-			else
-				contadorPausa <= 0;
-				dispensed <= '1';
-			end if;
-		end if ;
-	end if ;
+		else
+			arrive <= '0';
+		end if;
+	end if;
 
 	end process;
 
@@ -138,7 +126,86 @@ begin
 
 	end process;
 
-	StOut <= nSt;
-	DiOut <= nDi;
+	process(clk_min)
+	begin
+
+		if rising_edge(clk_min) then
+			
+			if reg_config(15 downto 12) = "0000" then
+				temp(3) <= '0';
+			else
+				if contadorA = reg_config(15 downto 12)-1 then
+					contadorA <= "0000";
+					temp(3) <= '1';
+				else
+					contadorA <= contadorA+1;
+					temp(3) <= '0';
+				end if;
+			end if;
+				
+			if reg_config(11 downto 8) = "0000" then
+				temp(2) <= '0';
+			else
+				if contadorB = reg_config(11 downto 8)-1 then
+					contadorB <= "0000";
+					temp(2) <= '1';
+				else
+					contadorB <= contadorB+1;
+					temp(2) <= '0';
+				end if;
+			end if;
+				
+			if reg_config(7 downto 4) = "0000" then
+				temp(1) <= '0';
+			else
+				if contadorC = reg_config(7 downto 4)-1 then
+					contadorC <= "0000";
+					temp(1) <= '1';
+				else
+					contadorC <= contadorC+1;
+					temp(1) <= '0';
+				end if;
+			end if;
+				
+			if reg_config(3 downto 0) = "0000" then
+				temp(0) <= '0';
+			else
+				if contadorD = reg_config(3 downto 0)-1 then
+					contadorD <= "0000";
+					temp(0) <= '1';
+				else
+					contadorD <= contadorD+1;
+					temp(0) <= '0';
+				end if;
+			end if;
+
+		end if;
+
+	end process;
+
+	-- process(clk)
+	-- begin
+	-- 	if rising_edge(clk) then
+	-- 		if edo = '0' then
+	-- 			if arrive = '1' then
+	-- 				flag_arrive <= '1';
+	-- 				edo <= '1';
+	-- 			else
+	-- 				edo <= '0';
+	-- 				flag_arrive <= '0';
+	-- 			end if;
+	-- 		else
+	-- 			if arrive = '1' then
+	-- 				edo <= '1';
+	-- 				flag_arrive <= '0';
+	-- 			else
+	-- 				edo <= '0';
+	-- 			end if;
+	-- 		end if;
+	-- 	end if;
+	-- end process;
+
+	StOut <= St;
+	DiOut <= Di;
 
 end Behavioral;

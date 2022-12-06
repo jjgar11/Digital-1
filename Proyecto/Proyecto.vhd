@@ -10,9 +10,9 @@ entity Proyecto is
 		clk : in std_logic;
 		columna: in std_logic_vector(3 downto 0);
 		config: in std_logic := '0';
+		okButton : in std_logic := '0';
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
-		--dispOn : out std_logic_vector(3 downto 0) := "1110";
 		--VecTiempos : out std_logic_vector(15 downto 0);
 		digit : out std_logic_vector(4 downto 0);
 		reg_config_bits : out std_logic_vector(3 downto 0);
@@ -36,7 +36,18 @@ architecture Behavioral of Proyecto is
 	signal ind : std_logic := '0';
 	signal reg_config : std_logic_vector(15 downto 0) := (others => '0');
 	signal vec_aux : std_logic_vector(7 downto 0);
+	signal okButton_ar : std_logic;
 
+	component anti_rebote
+
+	port(
+		clk : in std_logic;
+		Button : in std_logic;
+		isOn : out std_logic
+	);
+
+	end component;
+	
 	component div_frec
 		port(
 			-- Input ports
@@ -53,6 +64,7 @@ architecture Behavioral of Proyecto is
 			clk : in std_logic;
 			clk_motor : in std_logic;
 			clk_min : in std_logic;
+			okButton : in std_logic;
 			reg_config : in std_logic_vector(15 downto 0);
 			StIn : in std_logic;
 			DiIn : in std_logic;
@@ -131,8 +143,11 @@ begin
 	div4 : div_frec
 	port map(clk,1500e6,clk_min);
 
+	ar0 : anti_rebote
+	port map(clk_motor,okButton,okButton_ar);
+
 	control : control_motor
-	port map(clk,clk_motor,clk_min,reg_config,St,Di,St,Di);
+	port map(clk,clk_motor,clk_min,okButton_ar,reg_config,St,Di,St,Di);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);
@@ -143,9 +158,6 @@ begin
 	config_comp :control_config
 	port map(clk,config,boton,ind,reg_config,reg_config);
 
-	-- controlito : control_config
-	-- port map(clk,config,boton,ind,VecTiempos);
-	
 	prueba : DispSeg
 	port map(clk_ar,reg_config,boton,digit,disp7seg);
 
