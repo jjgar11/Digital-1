@@ -26,7 +26,7 @@ end control_motor;
 
 architecture Behavioral of control_motor is
 
-	type estados is (init, espera, toContainer, onContainer);
+	type estados is (init, espera, toContainer, onContainer, verify);
 	signal ep : estados := init;
 	signal ef : estados;
 
@@ -36,7 +36,7 @@ architecture Behavioral of control_motor is
 	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
 	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
 	signal St, Di, arrive : std_logic := '0';
-	-- signal edo, flag_arrive : std_logic := '0';
+	signal edo, flag_arrive : std_logic := '0';
 
 begin
 
@@ -46,7 +46,7 @@ begin
 	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
 	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
 	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
-	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 510;
+	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 50;
 
 	process(ep,clk)
 	begin
@@ -54,7 +54,8 @@ begin
 	case ep is
 
 		when init =>
-			if temp = tempAnt then
+		St <= '1';
+			if temp = tempAnt or temp = "0000" then
 				ef <= init;
 			else 
 				conteo <= temp;
@@ -62,20 +63,15 @@ begin
 			end if;
 
 		when espera =>
+			tempAnt <= temp;
 			buzzer <= '0';
-			
-			if conteo = "0000" then
-				St <= '1';
-				ef <= espera;
-			else
-				contSig(1) <= not conteo(3) and not conteo(2);
-				contSig(0) <= not conteo(3) and (conteo(2) or not conteo(1));
-				St <= '0';
-				ef <= toContainer;
-			end if;
+			contSig(1) <= not conteo(3) and not conteo(2);
+			contSig(0) <= not conteo(3) and (conteo(2) or not conteo(1));
+			St <= '0';
+			ef <= toContainer;
 
 		when toContainer =>
-			if arrive = '1' then
+			if flag_arrive = '1' then
 				buzzer <= '1';
 				St <= '1';
 				contAct <= contSig;
@@ -89,17 +85,19 @@ begin
 		when onContainer =>
 			if okButton = '1' then
 				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
-				conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
+				conteo <= ('0') & (not contSig(0) and conteo(2)) & (not contSig(1) and conteo(1)) & (conteo(0) and not (contSig(1) and contSig(0)));
 				buzzer <= '0';
-				if conteo = "0000" then
-					ef <= init;
-				else 
-					tempAnt <= temp;
-					ef <= espera;
-				end if;
+				ef <= verify;
 			else 
 				buzzer <= '1';
 				ef <= onContainer;
+			end if;
+
+		when verify =>
+			if conteo = "0000" then
+				ef <= init;
+			else 
+				ef <= espera;
 			end if;
 
 	end case;
@@ -191,27 +189,27 @@ begin
 
 	end process;
 
-	-- process(clk)
-	-- begin
-	-- 	if rising_edge(clk) then
-	-- 		if edo = '0' then
-	-- 			if arrive = '1' then
-	-- 				flag_arrive <= '1';
-	-- 				edo <= '1';
-	-- 			else
-	-- 				edo <= '0';
-	-- 				flag_arrive <= '0';
-	-- 			end if;
-	-- 		else
-	-- 			if arrive = '1' then
-	-- 				edo <= '1';
-	-- 				flag_arrive <= '0';
-	-- 			else
-	-- 				edo <= '0';
-	-- 			end if;
-	-- 		end if;
-	-- 	end if;
-	-- end process;
+	process(clk)
+	begin
+		if rising_edge(clk) then
+			if edo = '0' then
+				if arrive = '1' then
+					flag_arrive <= '1';
+					edo <= '1';
+				else
+					edo <= '0';
+					flag_arrive <= '0';
+				end if;
+			else
+				if arrive = '1' then
+					edo <= '1';
+					flag_arrive <= '0';
+				else
+					edo <= '0';
+				end if;
+			end if;
+		end if;
+	end process;
 
 	StOut <= St;
 	DiOut <= Di;
