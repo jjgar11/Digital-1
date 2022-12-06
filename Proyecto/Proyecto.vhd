@@ -11,7 +11,7 @@ entity Proyecto is
 		columna: in std_logic_vector(3 downto 0);
 		configIn: in std_logic := '0';
 		okButtonIn : in std_logic := '0';
-		conteoIn : in std_logic_vector(3 downto 0);
+		-- conteoIn : in std_logic_vector(3 downto 0);
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
 		--VecTiempos : out std_logic_vector(15 downto 0);
@@ -73,7 +73,7 @@ architecture Behavioral of Proyecto is
 			clk_min : in std_logic;
 			okButton : in std_logic;
 			reg_config : in std_logic_vector(15 downto 0);
-			conteo : in std_logic_vector(3 downto 0);
+			-- conteo : in std_logic_vector(3 downto 0);
 			StIn : in std_logic;
 			DiIn : in std_logic;
 			StOut : out std_logic;
@@ -143,7 +143,7 @@ begin
 
 	config <= not configIn;
 	okButton <= not okButtonIn;
-	conteo <= not conteoIn;
+	-- conteo <= not conteoIn;
 
 	ar0 : anti_rebote
 	port map(clk_motor,conteo(0),conteo_ar(0));
@@ -173,7 +173,7 @@ begin
 	-- port map(clk_motor,okButton,okButton_ar);
 
 	control : control_motor
-	port map(clk,clk_motor,clk_min,okButton,reg_config,conteo_ar,St,Di,St,Di,buzzer);
+	port map(clk,clk_motor,clk_min,okButton,reg_config,St,Di,St,Di,buzzer);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);

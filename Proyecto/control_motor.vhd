@@ -12,7 +12,7 @@ entity control_motor is
 		clk_min : in std_logic;
 		okButton : in std_logic:= '0';
 		reg_config : in std_logic_vector(15 downto 0);
-		conteo : std_logic_vector(3 downto 0);
+		-- conteo : std_logic_vector(3 downto 0);
 		StIn : in std_logic;
 		DiIn : in std_logic;
 		StOut : out std_logic;
@@ -30,17 +30,18 @@ architecture Behavioral of control_motor is
 	signal ef : estados;
 
 	signal contadorCiclos, ciclos : integer := 0;
+	signal conteo : std_logic_vector(3 downto 0) := "0000";
 	signal dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
 	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
 	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
-	signal St, Di, arrive: std_logic := '0';
+	signal St, Di, arrive, buzzer : std_logic := '0';
 	-- signal edo, flag_arrive : std_logic := '0';
 
 begin
 	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
 	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
 	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
-	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 50;
+	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 510;
 
 	process(ep,clk)
 	begin
@@ -48,12 +49,12 @@ begin
 	case ep is
 
 		when init =>
-			-- if temp = tempAnt then
-			-- 	ef <= init;
-			-- else 
-			-- 	conteo <= temp;
+			if temp = tempAnt then
+				ef <= init;
+			else 
+				conteo <= temp;
 				ef <= espera;
-			-- end if;
+			end if;
 
 		when espera =>
 			buzzer <= '0';
@@ -83,7 +84,7 @@ begin
 		when onContainer =>
 			if okButton = '1' then
 				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
-				-- conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
+				conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
 				buzzer <= '0';
 				if conteo = "0000" then
 					ef <= init;
