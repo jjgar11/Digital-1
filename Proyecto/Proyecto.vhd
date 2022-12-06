@@ -19,6 +19,7 @@ entity Proyecto is
 		reg_config_bits : out std_logic_vector(3 downto 0);
 		disp7seg : out std_logic_vector(7 downto 0);
 		conteoOut, tempOut : out std_logic_vector(3 downto 0);
+		clk_out : out std_logic;
 		buzzer_out : out std_logic
 	);
 
@@ -146,6 +147,7 @@ begin
 	config <= not configIn;
 	okButton <= not okButtonIn;
 	-- conteo <= not conteoIn;
+	clk_out <= clk_min;
 
 	ar0 : anti_rebote
 	port map(clk_motor,conteo(0),conteo_ar(0));
@@ -169,7 +171,7 @@ begin
 	port map(clk,500e3,clk_tc);
 
 	div4 : div_frec
-	port map(clk,1500e6,clk_min);
+	port map(clk,500e6,clk_min);
 
 	-- ar5 : anti_rebote
 	-- port map(clk_motor,okButton,okButton_ar);
