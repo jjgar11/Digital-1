@@ -18,6 +18,7 @@ entity Proyecto is
 		digit : out std_logic_vector(4 downto 0);
 		reg_config_bits : out std_logic_vector(3 downto 0);
 		disp7seg : out std_logic_vector(7 downto 0);
+		conteoOut, tempOut : out std_logic_vector(3 downto 0);
 		buzzer_out : out std_logic
 	);
 
@@ -78,6 +79,7 @@ architecture Behavioral of Proyecto is
 			DiIn : in std_logic;
 			StOut : out std_logic;
 			DiOut : out std_logic;
+			conteoOut, tempOut : out std_logic_vector(3 downto 0);
 			buzzer : out std_logic
 		);
 	end component;
@@ -173,7 +175,7 @@ begin
 	-- port map(clk_motor,okButton,okButton_ar);
 
 	control : control_motor
-	port map(clk,clk_motor,clk_min,okButton,reg_config,St,Di,St,Di,buzzer);
+	port map(clk,clk_motor,clk_min,okButton,reg_config,St,Di,St,Di,conteoOut,tempOut,buzzer);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);

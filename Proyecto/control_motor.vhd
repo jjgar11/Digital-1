@@ -17,6 +17,7 @@ entity control_motor is
 		DiIn : in std_logic;
 		StOut : out std_logic;
 		DiOut : out std_logic;
+		conteoOut, tempOut : out std_logic_vector(3 downto 0);
 		buzzer : out std_logic
 	);
 
@@ -38,6 +39,10 @@ architecture Behavioral of control_motor is
 	-- signal edo, flag_arrive : std_logic := '0';
 
 begin
+
+	conteoOut <= not conteo;
+	tempOut <= not temp;
+
 	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
 	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
 	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
