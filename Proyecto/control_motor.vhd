@@ -12,10 +12,12 @@ entity control_motor is
 		clk_min : in std_logic;
 		okButton : in std_logic:= '0';
 		reg_config : in std_logic_vector(15 downto 0);
+		conteo : std_logic_vector(3 downto 0);
 		StIn : in std_logic;
 		DiIn : in std_logic;
 		StOut : out std_logic;
-		DiOut : out std_logic
+		DiOut : out std_logic;
+		buzzer : out std_logic
 	);
 
 end control_motor;
@@ -28,10 +30,10 @@ architecture Behavioral of control_motor is
 	signal ef : estados;
 
 	signal contadorCiclos, ciclos : integer := 0;
-	signal conteo, dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
+	signal dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
 	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
 	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
-	signal St, Di, arrive, buzzer : std_logic := '0';
+	signal St, Di, arrive: std_logic := '0';
 	-- signal edo, flag_arrive : std_logic := '0';
 
 begin
@@ -46,12 +48,12 @@ begin
 	case ep is
 
 		when init =>
-			if temp = tempAnt then
-				ef <= init;
-			else 
-				conteo <= temp;
+			-- if temp = tempAnt then
+			-- 	ef <= init;
+			-- else 
+			-- 	conteo <= temp;
 				ef <= espera;
-			end if;
+			-- end if;
 
 		when espera =>
 			buzzer <= '0';
@@ -81,7 +83,7 @@ begin
 		when onContainer =>
 			if okButton = '1' then
 				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
-				conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
+				-- conteo <= ('0') & (not contAct(0) and conteo(2)) & (conteo(1)) & (conteo(0) and not (contAct(1) and contAct(0)));
 				buzzer <= '0';
 				if conteo = "0000" then
 					ef <= init;

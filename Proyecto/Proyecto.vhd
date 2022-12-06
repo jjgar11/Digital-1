@@ -7,16 +7,18 @@ use ieee.numeric_std.all;
 entity Proyecto is
 
 	port(
-		clk : in std_logic;
+		-- clk : in std_logic;
 		columna: in std_logic_vector(3 downto 0);
-		config: in std_logic := '0';
-		okButton : in std_logic := '0';
+		configIn: in std_logic := '0';
+		okButtonIn : in std_logic := '0';
+		conteoIn : in std_logic_vector(3 downto 0);
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
 		--VecTiempos : out std_logic_vector(15 downto 0);
 		digit : out std_logic_vector(4 downto 0);
 		reg_config_bits : out std_logic_vector(3 downto 0);
-		disp7seg : out std_logic_vector(7 downto 0)
+		disp7seg : out std_logic_vector(7 downto 0);
+		buzzer_out : out std_logic
 	);
 
 end Proyecto;
@@ -25,18 +27,23 @@ end Proyecto;
 architecture Behavioral of Proyecto is
 
 	-- Se simula el clock de la FPGA
-	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
-	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
-	-- signal clk : std_logic := '1';
+	constant ClockFrequency : integer := 50e6; -- 50 MHz
+	constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	signal clk : std_logic := '1';
 
 	signal clk_motor, clk_rebote, clk_ar, clk_min, clk_tc : std_logic := '1';
 	signal St, Di : std_logic := '0';
 	signal B : std_logic_vector(0 to 3) := "0001";
 	signal boton : std_logic_vector(3 downto 0) := "0000";
-	signal ind : std_logic := '0';
+	signal ind, buzzer : std_logic := '0';
 	signal reg_config : std_logic_vector(15 downto 0) := (others => '0');
 	signal vec_aux : std_logic_vector(7 downto 0);
-	signal okButton_ar : std_logic;
+	signal conteo_ar : std_logic_vector(3 downto 0);
+
+
+	signal config: std_logic := '0';
+	signal okButton : std_logic := '0';
+	signal conteo : std_logic_vector(3 downto 0);
 
 	component anti_rebote
 
@@ -66,10 +73,12 @@ architecture Behavioral of Proyecto is
 			clk_min : in std_logic;
 			okButton : in std_logic;
 			reg_config : in std_logic_vector(15 downto 0);
+			conteo : in std_logic_vector(3 downto 0);
 			StIn : in std_logic;
 			DiIn : in std_logic;
 			StOut : out std_logic;
-			DiOut : out std_logic
+			DiOut : out std_logic;
+			buzzer : out std_logic
 		);
 	end component;
 
@@ -129,10 +138,27 @@ architecture Behavioral of Proyecto is
 	end component;
 	
 begin
+	
+	clk <= not clk after ClockPeriod / 2;
 
-	-- clk <= not clk after ClockPeriod / 2;
+	config <= not configIn;
+	okButton <= not okButtonIn;
+	conteo <= not conteoIn;
+
+	ar0 : anti_rebote
+	port map(clk_motor,conteo(0),conteo_ar(0));
+	
+	ar1 : anti_rebote
+	port map(clk_motor,conteo(1),conteo_ar(1));
+	
+	ar2 : anti_rebote
+	port map(clk_motor,conteo(2),conteo_ar(2));
+	
+	ar3 : anti_rebote
+	port map(clk_motor,conteo(3),conteo_ar(3));
+	
 	div1 : div_frec
-	port map(clk,100e3,clk_motor);
+	port map(clk,100,clk_motor);
 
 	div2 : div_frec
 	port map(clk,25e3,clk_ar);
@@ -141,13 +167,13 @@ begin
 	port map(clk,500e3,clk_tc);
 
 	div4 : div_frec
-	port map(clk,1500e6,clk_min);
+	port map(clk,1500,clk_min);
 
-	ar0 : anti_rebote
-	port map(clk_motor,okButton,okButton_ar);
+	-- ar5 : anti_rebote
+	-- port map(clk_motor,okButton,okButton_ar);
 
 	control : control_motor
-	port map(clk,clk_motor,clk_min,okButton_ar,reg_config,St,Di,St,Di);
+	port map(clk,clk_motor,clk_min,okButton,reg_config,conteo_ar,St,Di,St,Di,buzzer);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);
@@ -158,10 +184,14 @@ begin
 	config_comp :control_config
 	port map(clk,config,boton,ind,reg_config,reg_config);
 
+	-- controlito : control_config
+	-- port map(clk,config,boton,ind,VecTiempos);
+	
 	prueba : DispSeg
 	port map(clk_ar,reg_config,boton,digit,disp7seg);
 
 	BO <= B;
+	buzzer_out <= not buzzer;
 	reg_config_bits <= not reg_config(15 downto 12);
 
 end Behavioral;
