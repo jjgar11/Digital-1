@@ -7,7 +7,7 @@ use ieee.numeric_std.all;
 entity Proyecto is
 
 	port(
-		-- clk : in std_logic;
+		clk : in std_logic;
 		columna: in std_logic_vector(3 downto 0);
 		configIn: in std_logic := '0';
 		okButtonIn : in std_logic := '0';
@@ -27,9 +27,9 @@ end Proyecto;
 architecture Behavioral of Proyecto is
 
 	-- Se simula el clock de la FPGA
-	constant ClockFrequency : integer := 50e6; -- 50 MHz
-	constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
-	signal clk : std_logic := '1';
+	-- constant ClockFrequency : integer := 50e6; -- 50 MHz
+	-- constant ClockPeriod    : time    := 1000 ms / ClockFrequency;
+	-- signal clk : std_logic := '1';
 
 	signal clk_motor, clk_rebote, clk_ar, clk_min, clk_tc : std_logic := '1';
 	signal St, Di : std_logic := '0';
@@ -139,7 +139,7 @@ architecture Behavioral of Proyecto is
 	
 begin
 	
-	clk <= not clk after ClockPeriod / 2;
+	-- clk <= not clk after ClockPeriod / 2;
 
 	config <= not configIn;
 	okButton <= not okButtonIn;
@@ -158,7 +158,7 @@ begin
 	port map(clk_motor,conteo(3),conteo_ar(3));
 	
 	div1 : div_frec
-	port map(clk,100,clk_motor);
+	port map(clk,100e3,clk_motor);
 
 	div2 : div_frec
 	port map(clk,25e3,clk_ar);
@@ -167,7 +167,7 @@ begin
 	port map(clk,500e3,clk_tc);
 
 	div4 : div_frec
-	port map(clk,1500,clk_min);
+	port map(clk,1500e6,clk_min);
 
 	-- ar5 : anti_rebote
 	-- port map(clk_motor,okButton,okButton_ar);
