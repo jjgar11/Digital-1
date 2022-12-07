@@ -41,6 +41,7 @@ architecture Behavioral of Proyecto is
 	signal reg_config : std_logic_vector(15 downto 0) := (others => '0');
 	signal vec_aux : std_logic_vector(7 downto 0);
 	signal conteo_ar : std_logic_vector(3 downto 0);
+	signal okButton_ar : std_logic;
 
 
 	signal config: std_logic := '0';
@@ -171,13 +172,13 @@ begin
 	port map(clk,500e3,clk_tc);
 
 	div4 : div_frec
-	port map(clk,500e6,clk_min);
+	port map(clk,750e6,clk_min);
 
-	-- ar5 : anti_rebote
-	-- port map(clk_motor,okButton,okButton_ar);
+	ar5 : anti_rebote
+	port map(clk_motor,okButton,okButton_ar);
 
 	control : control_motor
-	port map(clk,clk_motor,clk_min,okButton,reg_config,St,Di,St,Di,conteoOut,tempOut,buzzer);
+	port map(clk,clk_motor,clk_min,okButton_ar,reg_config,St,Di,St,Di,conteoOut,tempOut,buzzer);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);

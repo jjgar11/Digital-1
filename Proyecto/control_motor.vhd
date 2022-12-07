@@ -46,7 +46,7 @@ begin
 	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
 	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
 	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
-	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 50;
+	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 510;
 
 	process(ep,clk)
 	begin
@@ -54,7 +54,8 @@ begin
 	case ep is
 
 		when init =>
-		St <= '1';
+			-- St <= '1';
+			buzzer <= '0';
 			if temp = tempAnt or temp = "0000" then
 				ef <= init;
 			else 
