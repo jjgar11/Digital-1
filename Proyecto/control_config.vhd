@@ -12,13 +12,41 @@ entity control_config is
 		TeclaOprimida : in std_logic_vector(3 downto 0);
 		ind : in std_logic := '0';
 		reg_config_In : in std_logic_vector(15 downto 0);
-		reg_config_Out : out std_logic_vector(15 downto 0)
+		reg_config_Out : out std_logic_vector(15 downto 0);
+
+		rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
+		lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  
 	);
 
 end control_config;
 
 
 architecture Behavioral of control_config is
+
+
+	component  control_lcd IS
+		PORT(
+			clk,lcd_busy : IN  STD_LOGIC;  --system clock
+			lcd_enable : INOUT STD_LOGIC;  
+			lcd_reset: OUT std_logic:='0';
+			lcd_bus: OUT std_logic_vector(9 downto 0);
+			en_teclado: IN std_logic;
+			tecla: IN std_logic_vector(3 downto 0)
+		); --data signals for lcd
+	END component control_lcd;
+
+	component driver IS
+		PORT(
+			clk        : IN   STD_LOGIC;                     --system clock
+			reset_n    : IN   STD_LOGIC;                     --active low reinitializes lcd
+			lcd_enable : IN   STD_LOGIC;                     --latches data into lcd controller
+			lcd_bus    : IN   STD_LOGIC_VECTOR(9 DOWNTO 0);  --data and control signals
+			busy       : OUT  STD_LOGIC := '1';              --lcd controller busy/idle feedback
+			rw, rs, e  : OUT  STD_LOGIC;                     --read/write, setup/data, and enable for lcd
+			lcd_data   : OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+		); --data signals for lcd
+	END component  driver;
 
 	type estados is (init, esperaContenedor, tiempo, esperaTiempo0, esperaTiempo1, guardar, pausa);
 	signal ep : estados := pausa; 	--Estado Presente
@@ -29,7 +57,18 @@ architecture Behavioral of control_config is
 	signal TiempoBin : std_logic_vector(3 downto 0);
 	signal temp0 : std_logic_vector(3 downto 0);
 
+	signal sig_bus: std_logic_vector(9 downto 0);
+	signal sig_reset: std_logic;
+	signal sig_en: std_logic:='1';
+	signal sig_busy: std_logic;
+
 begin
+
+	u_logic: control_lcd
+	port map( clk, sig_busy, sig_en, sig_reset, sig_bus, ind, TeclaOprimida);
+	lcd_driver: driver
+	port map(clk, sig_reset, sig_en, sig_bus, sig_busy, rw, rs, e, lcd_data);
+
 
 	process(ep,ind,config)
 	begin
