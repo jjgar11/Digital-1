@@ -20,7 +20,10 @@ entity Proyecto is
 		disp7seg : out std_logic_vector(7 downto 0);
 		conteoOut, tempOut : out std_logic_vector(3 downto 0);
 		clk_out : out std_logic;
-		buzzer_out : out std_logic
+		buzzer_out : out std_logic;
+
+		rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
+		lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
 	);
 
 end Proyecto;
@@ -126,7 +129,10 @@ architecture Behavioral of Proyecto is
 			ind : in std_logic := '0';
 			-- VecTiempos : out std_logic_vector(15 downto 0) := (others => '0');
 			reg_config_In : in std_logic_vector(15 downto 0);
-			reg_config_Out : out std_logic_vector(15 downto 0)
+			reg_config_Out : out std_logic_vector(15 downto 0);
+
+			rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
+			lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
 		);
 	end component;
 
