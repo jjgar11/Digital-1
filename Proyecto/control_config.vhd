@@ -80,44 +80,43 @@ begin
 		when pausa =>
 			--TiempoBin <= "0000";
 			--Tecla <= "0000";
-			text_command <= "00";  --Presione config
 			if config = '1' then
 				ef <= init;
-			else 
+				else 
+				text_command <= "00";  --Presione config
 				ef <= pausa;
 			end if;
 
 		when init =>
-			text_command <= "01";  --Seleccione contenedor 
 			if (TeclaOprimida >= x"A" or TeclaOprimida <= x"D") and ind = '1' then
 				Tecla <= TeclaOprimida;
 				ef <= esperaContenedor;
 			else
 				ef <= init;
+				text_command <= "01";  --Seleccione contenedor 
 			end if;
 		
 		when esperaContenedor =>
-			text_command <= "10";  --Presione OK
 			if TeclaOprimida = x"E" and ind = '1' then
 				ef <= init;
 			elsif TeclaOprimida = x"F" and ind = '1' then
 				ef <= tiempo;
 			else
+				text_command <= "10";  --Presione OK
 				ef <= esperaContenedor;
 			end if;
 
 		when tiempo =>
-			text_command <= "11";  --Digite el Tiempo
 			if TeclaOprimida >= x"0" and TeclaOprimida <= x"9" and ind = '1' then
 				TiempoBin <= TeclaOprimida;
 				temp0 <= TeclaOprimida;
 				ef <= esperaTiempo1;
 			else 
+				text_command <= "11";  --Digite el Tiempo
 				ef <= tiempo;
 			end if;
 
 		when esperaTiempo1 =>
-			text_command <= "11";  --Digite el Tiempo
 			if TeclaOprimida = x"F" and ind = '1' then
 				ef <= guardar;
 			elsif temp0 <= x"1" and TeclaOprimida>=x"0" and TeclaOprimida<=x"5" and ind = '1' then
@@ -126,16 +125,17 @@ begin
 			elsif TeclaOprimida = x"E" and ind = '1' then
 				ef <= tiempo;
 			else
+				text_command <= "11";  --Digite el Tiempo
 				ef <= esperaTiempo1;
 			end if;
 
 		when esperaTiempo0 =>
-			text_command <= "10"; --presione OK
 			if TeclaOprimida = x"E" and ind = '1' then
 				ef <= tiempo;
 			elsif TeclaOprimida = x"F" and ind = '1' then
 				ef <= guardar;
 			else
+				text_command <= "10"; --presione OK
 				ef <= esperaTiempo0;
 			end if;
 

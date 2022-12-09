@@ -11,10 +11,8 @@ entity Proyecto is
 		columna: in std_logic_vector(3 downto 0);
 		configIn: in std_logic := '0';
 		okButtonIn : in std_logic := '0';
-		-- conteoIn : in std_logic_vector(3 downto 0);
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
-		--VecTiempos : out std_logic_vector(15 downto 0);
 		comm_ino : out std_logic_vector(1 downto 0);
 		digit : out std_logic_vector(4 downto 0);
 		reg_config_bits : out std_logic_vector(3 downto 0);

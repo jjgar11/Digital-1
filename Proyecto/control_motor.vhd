@@ -11,8 +11,7 @@ entity control_motor is
 		clk_motor : in std_logic;
 		clk_min : in std_logic;
 		okButton : in std_logic:= '0';
-		reg_config : in std_logic_vector(15 downto 0);
-		-- conteo : std_logic_vector(3 downto 0);
+		reg_config : in std_logic_vector(15 downto 0) := (others => '0');
 		StIn : in std_logic;
 		DiIn : in std_logic;
 		StOut : out std_logic;
@@ -37,7 +36,7 @@ architecture Behavioral of control_motor is
 	signal dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
 	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
 	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
-	signal St, Di, arrive : std_logic := '1';
+	signal St, Di, arrive : std_logic := '0';
 	signal edo, flag_arrive : std_logic := '0';
 
 begin
@@ -56,7 +55,7 @@ begin
 	case ep is
 
 		when init =>
-			-- St <= '1';
+			St <= '1';
 			buzzer <= '0';
 			if temp = tempAnt or temp = "0000" then
 				ef <= init;
