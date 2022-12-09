@@ -17,6 +17,8 @@ entity control_motor is
 		DiIn : in std_logic;
 		StOut : out std_logic;
 		DiOut : out std_logic;
+		TeclaOprimida : in  std_logic_vector(3 downto 0);
+		ind : in std_logic;
 		conteoOut, tempOut : out std_logic_vector(3 downto 0);
 		buzzer : out std_logic
 	);
@@ -84,7 +86,7 @@ begin
 			end if;
 
 		when onContainer =>
-			if okButton = '1' then
+			if TeclaOprimida = x"F" and ind = '1' then
 				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
 				conteo <= ('0') & (not contSig(0) and conteo(2)) & (not contSig(1) and conteo(1)) & (conteo(0) and not (contSig(1) and contSig(0)));
 				buzzer <= '0';
@@ -109,7 +111,7 @@ begin
 	begin
 
 	if rising_edge(clk_motor) then
-		if St = '0' then
+		if St = '0' and ep = toContainer then
 			if contadorCiclos < ciclos then
 				contadorCiclos <= contadorCiclos + 1;
 				arrive <= '0';
@@ -133,7 +135,7 @@ begin
 
 	end process;
 
-	process(clk_min)
+	process(clk_min, reg_config)
 	begin
 
 		if rising_edge(clk_min) then
@@ -141,7 +143,7 @@ begin
 			if reg_config(15 downto 12) = "0000" then
 				temp(3) <= '0';
 			else
-				if contadorA = reg_config(15 downto 12)-1 then
+				if contadorA >= reg_config(15 downto 12)-1 then
 					contadorA <= "0000";
 					temp(3) <= '1';
 				else
@@ -153,7 +155,7 @@ begin
 			if reg_config(11 downto 8) = "0000" then
 				temp(2) <= '0';
 			else
-				if contadorB = reg_config(11 downto 8)-1 then
+				if contadorB >= reg_config(11 downto 8)-1 then
 					contadorB <= "0000";
 					temp(2) <= '1';
 				else
@@ -165,7 +167,7 @@ begin
 			if reg_config(7 downto 4) = "0000" then
 				temp(1) <= '0';
 			else
-				if contadorC = reg_config(7 downto 4)-1 then
+				if contadorC >= reg_config(7 downto 4)-1 then
 					contadorC <= "0000";
 					temp(1) <= '1';
 				else
@@ -177,7 +179,7 @@ begin
 			if reg_config(3 downto 0) = "0000" then
 				temp(0) <= '0';
 			else
-				if contadorD = reg_config(3 downto 0)-1 then
+				if contadorD >= reg_config(3 downto 0)-1 then
 					contadorD <= "0000";
 					temp(0) <= '1';
 				else

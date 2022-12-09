@@ -15,6 +15,7 @@ entity Proyecto is
 		fila: out std_logic_vector(3 downto 0);
 		BO : out std_logic_vector(3 downto 0);
 		--VecTiempos : out std_logic_vector(15 downto 0);
+		comm_ino : out std_logic_vector(1 downto 0);
 		digit : out std_logic_vector(4 downto 0);
 		reg_config_bits : out std_logic_vector(3 downto 0);
 		disp7seg : out std_logic_vector(7 downto 0);
@@ -46,7 +47,7 @@ architecture Behavioral of Proyecto is
 	signal conteo_ar : std_logic_vector(3 downto 0);
 	signal okButton_ar : std_logic;
 
-
+	signal configIno: std_logic := '0';
 	signal config: std_logic := '0';
 	signal okButton : std_logic := '0';
 	signal conteo : std_logic_vector(3 downto 0);
@@ -84,6 +85,8 @@ architecture Behavioral of Proyecto is
 			DiIn : in std_logic;
 			StOut : out std_logic;
 			DiOut : out std_logic;
+			TeclaOprimida : in std_logic_vector(3 downto 0);
+			ind : in std_logic;
 			conteoOut, tempOut : out std_logic_vector(3 downto 0);
 			buzzer : out std_logic
 		);
@@ -128,6 +131,7 @@ architecture Behavioral of Proyecto is
 			TeclaOprimida : in std_logic_vector(3 downto 0);
 			ind : in std_logic := '0';
 			-- VecTiempos : out std_logic_vector(15 downto 0) := (others => '0');
+			comm_ino : out std_logic_vector(1 downto 0);
 			reg_config_In : in std_logic_vector(15 downto 0);
 			reg_config_Out : out std_logic_vector(15 downto 0);
 
@@ -151,7 +155,7 @@ begin
 	
 	-- clk <= not clk after ClockPeriod / 2;
 
-	config <= not configIn;
+	configIno <= not configIn;
 	okButton <= not okButtonIn;
 	-- conteo <= not conteoIn;
 	clk_out <= clk_min;
@@ -181,10 +185,10 @@ begin
 	port map(clk,750e6,clk_min);
 
 	ar5 : anti_rebote
-	port map(clk_motor,okButton,okButton_ar);
+	port map(clk_motor,configIno,config);
 
 	control : control_motor
-	port map(clk,clk_motor,clk_min,okButton_ar,reg_config,St,Di,St,Di,conteoOut,tempOut,buzzer);
+	port map(clk,clk_motor,clk_min,okButton,reg_config,St,Di,St,Di,boton,ind,conteoOut,tempOut,buzzer);
 
 	motor : PAP_motor
 	port map(clk_motor,St,Di,B,B);
@@ -193,7 +197,7 @@ begin
 	port map(clk,columna,fila,boton,ind,vec_aux);
 
 	config_comp :control_config
-	port map(clk,config,boton,ind,reg_config,reg_config);
+	port map(clk,config,boton,ind,comm_ino,reg_config,reg_config);
 
 	-- controlito : control_config
 	-- port map(clk,config,boton,ind,VecTiempos);

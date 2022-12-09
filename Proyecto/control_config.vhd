@@ -11,11 +11,12 @@ entity control_config is
 		config : in std_logic;
 		TeclaOprimida : in std_logic_vector(3 downto 0);
 		ind : in std_logic := '0';
+		comm_ino : out std_logic_vector(1 downto 0);
 		reg_config_In : in std_logic_vector(15 downto 0);
-		reg_config_Out : out std_logic_vector(15 downto 0);
+		reg_config_Out : out std_logic_vector(15 downto 0)
 
-		rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
-		lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+		-- rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
+		-- lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
   
 	);
 
@@ -25,28 +26,28 @@ end control_config;
 architecture Behavioral of control_config is
 
 
-	component  control_lcd IS
-		PORT(
-			clk,lcd_busy : IN  STD_LOGIC;  --system clock
-			lcd_enable : INOUT STD_LOGIC;  
-			lcd_reset: OUT std_logic:='0';
-			lcd_bus: OUT std_logic_vector(9 downto 0);
-			en_teclado: IN std_logic;
-			tecla: IN std_logic_vector(3 downto 0)
-		); --data signals for lcd
-	END component control_lcd;
+	-- component  control_lcd IS
+	-- 	PORT(
+	-- 		clk,lcd_busy : IN  STD_LOGIC;  --system clock
+	-- 		lcd_enable : INOUT STD_LOGIC;  
+	-- 		lcd_reset: OUT std_logic:='0';
+	-- 		lcd_bus: OUT std_logic_vector(9 downto 0);
+	-- 		en_teclado: IN std_logic;
+	-- 		tecla: IN std_logic_vector(3 downto 0)
+	-- 	); --data signals for lcd
+	-- END component control_lcd;
 
-	component driver IS
-		PORT(
-			clk        : IN   STD_LOGIC;                     --system clock
-			reset_n    : IN   STD_LOGIC;                     --active low reinitializes lcd
-			lcd_enable : IN   STD_LOGIC;                     --latches data into lcd controller
-			lcd_bus    : IN   STD_LOGIC_VECTOR(9 DOWNTO 0);  --data and control signals
-			busy       : OUT  STD_LOGIC := '1';              --lcd controller busy/idle feedback
-			rw, rs, e  : OUT  STD_LOGIC;                     --read/write, setup/data, and enable for lcd
-			lcd_data   : OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
-		); --data signals for lcd
-	END component  driver;
+	-- component driver IS
+	-- 	PORT(
+	-- 		clk        : IN   STD_LOGIC;                     --system clock
+	-- 		reset_n    : IN   STD_LOGIC;                     --active low reinitializes lcd
+	-- 		lcd_enable : IN   STD_LOGIC;                     --latches data into lcd controller
+	-- 		lcd_bus    : IN   STD_LOGIC_VECTOR(9 DOWNTO 0);  --data and control signals
+	-- 		busy       : OUT  STD_LOGIC := '1';              --lcd controller busy/idle feedback
+	-- 		rw, rs, e  : OUT  STD_LOGIC;                     --read/write, setup/data, and enable for lcd
+	-- 		lcd_data   : OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+	-- 	); --data signals for lcd
+	-- END component  driver;
 
 	type estados is (init, esperaContenedor, tiempo, esperaTiempo0, esperaTiempo1, guardar, pausa);
 	signal ep : estados := pausa; 	--Estado Presente
@@ -56,6 +57,7 @@ architecture Behavioral of control_config is
 	signal Tecla : std_logic_vector(3 downto 0);
 	signal TiempoBin : std_logic_vector(3 downto 0);
 	signal temp0 : std_logic_vector(3 downto 0);
+	signal text_command : std_logic_vector(1 downto 0) := "00";
 
 	signal sig_bus: std_logic_vector(9 downto 0);
 	signal sig_reset: std_logic;
@@ -78,6 +80,7 @@ begin
 		when pausa =>
 			--TiempoBin <= "0000";
 			--Tecla <= "0000";
+			text_command <= "00";  --Presione config
 			if config = '1' then
 				ef <= init;
 			else 
@@ -85,6 +88,7 @@ begin
 			end if;
 
 		when init =>
+			text_command <= "01";  --Seleccione contenedor 
 			if (TeclaOprimida >= x"A" or TeclaOprimida <= x"D") and ind = '1' then
 				Tecla <= TeclaOprimida;
 				ef <= esperaContenedor;
@@ -93,6 +97,7 @@ begin
 			end if;
 		
 		when esperaContenedor =>
+			text_command <= "10";  --Presione OK
 			if TeclaOprimida = x"E" and ind = '1' then
 				ef <= init;
 			elsif TeclaOprimida = x"F" and ind = '1' then
@@ -102,6 +107,7 @@ begin
 			end if;
 
 		when tiempo =>
+			text_command <= "11";  --Digite el Tiempo
 			if TeclaOprimida >= x"0" and TeclaOprimida <= x"9" and ind = '1' then
 				TiempoBin <= TeclaOprimida;
 				temp0 <= TeclaOprimida;
@@ -111,6 +117,7 @@ begin
 			end if;
 
 		when esperaTiempo1 =>
+			text_command <= "11";  --Digite el Tiempo
 			if TeclaOprimida = x"F" and ind = '1' then
 				ef <= guardar;
 			elsif temp0 <= x"1" and TeclaOprimida>=x"0" and TeclaOprimida<=x"5" and ind = '1' then
@@ -123,6 +130,7 @@ begin
 			end if;
 
 		when esperaTiempo0 =>
+			text_command <= "10"; --presione OK
 			if TeclaOprimida = x"E" and ind = '1' then
 				ef <= tiempo;
 			elsif TeclaOprimida = x"F" and ind = '1' then
@@ -156,5 +164,6 @@ begin
 	end process;
 
 	reg_config_Out <= reg_config;
+	comm_ino <= not text_command;
 
 end Behavioral;
