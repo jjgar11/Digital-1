@@ -133,10 +133,10 @@ architecture Behavioral of Proyecto is
 			-- VecTiempos : out std_logic_vector(15 downto 0) := (others => '0');
 			comm_ino : out std_logic_vector(1 downto 0);
 			reg_config_In : in std_logic_vector(15 downto 0);
-			reg_config_Out : out std_logic_vector(15 downto 0);
+			reg_config_Out : out std_logic_vector(15 downto 0)
 
-			rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
-			lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+			-- rw, rs, e : OUT STD_LOGIC;  --read/write, setup/data, and enable for lcd
+			-- lcd_data  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
 		);
 	end component;
 

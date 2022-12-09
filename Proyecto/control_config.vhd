@@ -66,10 +66,10 @@ architecture Behavioral of control_config is
 
 begin
 
-	u_logic: control_lcd
-	port map( clk, sig_busy, sig_en, sig_reset, sig_bus, ind, TeclaOprimida);
-	lcd_driver: driver
-	port map(clk, sig_reset, sig_en, sig_bus, sig_busy, rw, rs, e, lcd_data);
+	-- u_logic: control_lcd
+	-- port map( clk, sig_busy, sig_en, sig_reset, sig_bus, ind, TeclaOprimida);
+	-- lcd_driver: driver
+	-- port map(clk, sig_reset, sig_en, sig_bus, sig_busy, rw, rs, e, lcd_data);
 
 
 	process(ep,ind,config)

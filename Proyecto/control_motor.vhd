@@ -37,7 +37,7 @@ architecture Behavioral of control_motor is
 	signal dispensed, temp, tempAnt : std_logic_vector(3 downto 0) := "0000";
 	signal contAct, contSig, ciclosBin : std_logic_vector(1 downto 0) := "00";
 	signal contadorA,contadorB,contadorC,contadorD : std_logic_vector(3 downto 0) := "0000";
-	signal St, Di, arrive : std_logic := '0';
+	signal St, Di, arrive : std_logic := '1';
 	signal edo, flag_arrive : std_logic := '0';
 
 begin
@@ -111,7 +111,7 @@ begin
 	begin
 
 	if rising_edge(clk_motor) then
-		if St = '0' and ep = toContainer then
+		if St = '0' then
 			if contadorCiclos < ciclos then
 				contadorCiclos <= contadorCiclos + 1;
 				arrive <= '0';
