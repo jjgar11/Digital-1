@@ -11,8 +11,7 @@ port(
 	columnas   : in  std_logic_vector(3 downto 0); --puerto conectado a las columnas del teclado
 	filas 	  : out std_logic_vector(3 downto 0); --puerto conectado a la filas del teclado
 	boton_pres : out std_logic_vector(3 downto 0); --puerto que indica la tecla que se presion�
-	ind		  : out std_logic;							  --bandera que indica cuando se presion� una tecla (s�lo dura un ciclo de reloj)
-	siete_seg : out std_logic_vector(7 downto 0) := "11111111"
+	ind		  : out std_logic							  --bandera que indica cuando se presion� una tecla (s�lo dura un ciclo de reloj)
 );
 
 end tecladoDos;
@@ -138,22 +137,22 @@ end process;
 process(clk)
 begin
 	if rising_edge(clk) then
-		if 	reg_b0  	= "11111111" then boton_pres <= x"0"; ind_s <= '1'; siete_seg <= "00000011"; --0
-		elsif reg_b1 	= "11111111" then boton_pres <= x"1"; ind_s <= '1'; siete_seg <= "10011111"; --1
-		elsif reg_b2 	= "11111111" then boton_pres <= x"2"; ind_s <= '1'; siete_seg <= "00100101"; --2
-		elsif reg_b3 	= "11111111" then boton_pres <= x"3"; ind_s <= '1'; siete_seg <= "00001101"; --3
-		elsif reg_b4 	= "11111111" then boton_pres <= x"4"; ind_s <= '1'; siete_seg <= "10011001"; --4
-		elsif reg_b5 	= "11111111" then boton_pres <= x"5"; ind_s <= '1'; siete_seg <= "01001001"; --5
-		elsif reg_b6 	= "11111111" then boton_pres <= x"6"; ind_s <= '1'; siete_seg <= "01000001"; --6
-		elsif reg_b7 	= "11111111" then boton_pres <= x"7"; ind_s <= '1'; siete_seg <= "00011111"; --7
-		elsif reg_b8 	= "11111111" then boton_pres <= x"8"; ind_s <= '1'; siete_seg <= "00000001"; --8
-		elsif reg_b9 	= "11111111" then boton_pres <= x"9"; ind_s <= '1'; siete_seg <= "00001001"; --9
-		elsif reg_ba 	= "11111111" then boton_pres <= x"a"; ind_s <= '1'; siete_seg <= "00010001"; --a
-		elsif reg_bb 	= "11111111" then boton_pres <= x"b"; ind_s <= '1'; siete_seg <= "11000001"; --b
-		elsif reg_bc 	= "11111111" then boton_pres <= x"c"; ind_s <= '1'; siete_seg <= "01100011"; --c
-		elsif reg_bd 	= "11111111" then boton_pres <= x"d"; ind_s <= '1'; siete_seg <= "10000101"; --d
-		elsif reg_bas 	= "11111111" then boton_pres <= x"e"; ind_s <= '1'; siete_seg <= "11111110"; --*
-		elsif reg_bga 	= "11111111" then boton_pres <= x"f"; ind_s <= '1'; siete_seg <= "10010000"; --h
+		if reg_b0		= "11111111" then boton_pres <= x"0"; ind_s <= '1';
+		elsif reg_b1 	= "11111111" then boton_pres <= x"1"; ind_s <= '1';
+		elsif reg_b2 	= "11111111" then boton_pres <= x"2"; ind_s <= '1';
+		elsif reg_b3 	= "11111111" then boton_pres <= x"3"; ind_s <= '1';
+		elsif reg_b4 	= "11111111" then boton_pres <= x"4"; ind_s <= '1';
+		elsif reg_b5 	= "11111111" then boton_pres <= x"5"; ind_s <= '1';
+		elsif reg_b6 	= "11111111" then boton_pres <= x"6"; ind_s <= '1';
+		elsif reg_b7 	= "11111111" then boton_pres <= x"7"; ind_s <= '1';
+		elsif reg_b8 	= "11111111" then boton_pres <= x"8"; ind_s <= '1';
+		elsif reg_b9 	= "11111111" then boton_pres <= x"9"; ind_s <= '1';
+		elsif reg_ba 	= "11111111" then boton_pres <= x"a"; ind_s <= '1';
+		elsif reg_bb 	= "11111111" then boton_pres <= x"b"; ind_s <= '1';
+		elsif reg_bc 	= "11111111" then boton_pres <= x"c"; ind_s <= '1';
+		elsif reg_bd 	= "11111111" then boton_pres <= x"d"; ind_s <= '1';
+		elsif reg_bas 	= "11111111" then boton_pres <= x"e"; ind_s <= '1';
+		elsif reg_bga 	= "11111111" then boton_pres <= x"f"; ind_s <= '1';
 		else ind_s <= '0';
 		end if;
 	end if;

@@ -10,7 +10,6 @@ entity control_motor is
 		clk : in std_logic;
 		clk_motor : in std_logic;
 		clk_min : in std_logic;
-		okButton : in std_logic:= '0';
 		reg_config : in std_logic_vector(15 downto 0) := (others => '0');
 		StIn : in std_logic;
 		DiIn : in std_logic;

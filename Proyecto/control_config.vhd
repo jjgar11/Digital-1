@@ -57,7 +57,7 @@ architecture Behavioral of control_config is
 	signal Tecla : std_logic_vector(3 downto 0);
 	signal TiempoBin : std_logic_vector(3 downto 0);
 	signal temp0 : std_logic_vector(3 downto 0);
-	signal text_command : std_logic_vector(1 downto 0) := "00";
+	signal text_command : std_logic_vector(1 downto 0);
 
 	signal sig_bus: std_logic_vector(9 downto 0);
 	signal sig_reset: std_logic;
