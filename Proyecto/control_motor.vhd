@@ -10,6 +10,7 @@ entity control_motor is
 		clk : in std_logic;
 		clk_motor : in std_logic;
 		clk_min : in std_logic;
+		okSwitch : in std_logic;
 		reg_config : in std_logic_vector(15 downto 0) := (others => '0');
 		StIn : in std_logic;
 		DiIn : in std_logic;
@@ -46,7 +47,7 @@ begin
 	ciclosBin(1) <= ((not contAct(1) and contSig(1)) or (contAct(1) and not contSig(1))) and ((not contAct(0) and not contSig(0)) or (contAct(0) and contSig(0)));
 	ciclosBin(0) <= (not contAct(0) and contSig(0)) or (contAct(0) and not contSig(0));
 	Di <= (not contAct(1) and not contAct(0) and not contSig(1)) or (not contAct(1) and contAct(0) and contSig(1)) or (contAct(1) and not contAct(0) and contSig(1)) or (contAct(1) and contAct(0) and not contSig(1));
-	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 510;
+	ciclos <= to_integer(ieee.numeric_std.unsigned(ciclosBin)) * 512;
 
 	process(ep,clk)
 	begin
@@ -84,7 +85,7 @@ begin
 			end if;
 
 		when onContainer =>
-			if TeclaOprimida = x"F" and ind = '1' then
+			if (TeclaOprimida = x"F" and ind = '1') or okSwitch = '1' then
 				-- dispensed <= (not contAct(1) and not contAct(0)) & (not contAct(1) and contAct(0)) & (contAct(1) and not contAct(0)) & (contAct(1) and contAct(0));
 				conteo <= ('0') & (not contSig(0) and conteo(2)) & (not contSig(1) and conteo(1)) & (conteo(0) and not (contSig(1) and contSig(0)));
 				buzzer <= '0';
